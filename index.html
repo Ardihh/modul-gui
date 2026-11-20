@@ -117,9 +117,23 @@
             </li>
             
             <li>
-              <a href="#bab-9" class="nav-link ">
-                <span class="badge-num">09</span>
-                <span>Event Handling & ActionListener</span>
+              <a href="#bab-9a" class="nav-link ">
+                <span class="badge-num">09A</span>
+                <span>Fondasi & 4 Gaya Listener</span>
+              </a>
+            </li>
+            
+            <li>
+              <a href="#bab-9b" class="nav-link ">
+                <span class="badge-num">09B</span>
+                <span>Katalog Listener & Adapter</span>
+              </a>
+            </li>
+            
+            <li>
+              <a href="#bab-9c" class="nav-link ">
+                <span class="badge-num">09C</span>
+                <span>Event Playground & 3 Mini-Proyek</span>
               </a>
             </li>
             
@@ -178,7 +192,7 @@
             <li>
               <a href="#kuis" class="nav-link ">
                 <span class="badge-num">🎯</span>
-                <span>Kuis Interaktif (12 Soal)</span>
+                <span>Kuis Interaktif (20 Soal)</span>
               </a>
             </li>
             
@@ -2134,99 +2148,132 @@ public class BorderDemo extends JFrame {
           <span class="nav-title">Bab 7: Navigasi Halaman: CardLayout</span>
         </a>
         
-        <a href="#bab-9" class="btn-nav-chapter btn-nav-next">
+        <a href="#bab-9a" class="btn-nav-chapter btn-nav-next">
           <span class="nav-dir">Berikutnya →</span>
-          <span class="nav-title">Bab 9: Event Handling & ActionListener</span>
+          <span class="nav-title">Bab 09A: Fondasi & 4 Gaya Listener</span>
         </a>
         </div>
     </article>
     
       
-    <article class="chapter-article" id="bab-9">
-      <div class="chapter-badge">Bab 09 • Interaktivitas</div>
-      <h1 class="chapter-title">Menghidupkan GUI: Event Handling & ActionListener</h1>
+    <article class="chapter-article" id="bab-9a">
+      <div class="chapter-badge">Bab 09A • Fondasi Event Handling</div>
+      <h1 class="chapter-title">Fondasi Event Handling & 4 Gaya Penulisan Listener</h1>
       <p class="chapter-lead">
-        Memahami siklus kerja Event-Driven Architecture (Event Source, Event Object, Event Listener), membandingkan Anonymous Class vs Lambda Expression modern, serta membaca dan mengubah status JCheckBox secara dinamis.
+        Memahami Event-Driven Architecture sebagai penerapan nyata konsep Interface dan Polimorfisme OOP, membedah siklus kejadian (Event Model), mengekstrak informasi Event Object, serta membandingkan 4 gaya penulisan listener pada satu kasus yang sama.
       </p>
 
       <div class="objectives-card">
         <div class="objectives-title">🎯 Tujuan Pembelajaran</div>
         <ul class="objectives-list">
-          <li>Memahami tripartit arsitektur event: <em>Event Source</em>, <em>Event Object</em>, dan <em>Event Listener</em>.</li>
-          <li>Mengimplementasikan <code>ActionListener</code> menggunakan Lambda Expression (Java 8+).</li>
-          <li>Membaca status pilihan pengguna pada <code>JCheckBox</code> melalui method <code>isSelected()</code>.</li>
-          <li>Mereset formulir dan memperbarui tampilan teks komponen secara dinamis saat runtime.</li>
+          <li>Menjelaskan hubungan arsitektur Event Handling Swing dengan materi <strong>Interface & Polimorfisme</strong> (Modul 2).</li>
+          <li>Menguraikan siklus <strong>Event Model</strong>: <em>Event Source</em>, <em>Event Object</em>, dan <em>Event Listener</em>.</li>
+          <li>Mengekstrak informasi penting dari objek event: <code>getSource()</code>, <code>getActionCommand()</code>, koordinat, dan tombol keyboard.</li>
+          <li>Mengimplementasikan 4 gaya penulisan listener pada satu kasus penghitung porsi kopi kafe.</li>
+          <li>Mengelola banyak tombol dengan satu listener terpusat secara aman.</li>
         </ul>
       </div>
 
-      <h2>1. Segitiga Emas Event Handling di Java Swing</h2>
+      <h2>1. Model Event: Analogi Bel Pintu Kafe</h2>
       <p>
-        Bagaimana komponen visual yang mati bisa menjadi hidup dan merespon tindakan pengguna? Ada tiga entitas yang bekerja sama:
+        Pada aplikasi konsol prosedural (CLI), program berjalan secara diktator: program menentukan kapan giliran membaca input dan kapan mencetak output. Pada GUI, pengguna memegang kendali penuh. Program berada dalam kondisi pasif "mendengarkan" hingga terjadi suatu interaksi.
       </p>
-      <ol>
+      <p>
+        Mekanisme ini bekerja melalui <strong>Tripartit Event Model</strong>:
+      </p>
+      <ul>
         <li>
-          <strong>Event Source (Sumber Kejadian):</strong> Komponen yang disentuh pengguna, misalnya <code>JButton</code> yang diklik atau <code>JCheckBox</code> yang dicentang.
+          <strong>1. Event Source (Sumber Kejadian):</strong> Komponen visual yang disentuh pengguna, misalnya saklar bel pintu di depan kafe (objek <code>JButton</code>).
         </li>
         <li>
-          <strong>Event Object (Benda Kejadian):</strong> Objek yang diciptakan otomatis oleh Java saat kejadian terjadi (misalnya <code>ActionEvent</code>). Objek ini membawa informasi penting, seperti siapa sumbernya dan kapan kejadian berlangsung.
+          <strong>2. Event Object (Informasi Kejadian):</strong> Saat saklar ditekan, sistem secara otomatis membungkus semua fakta kejadian ke dalam sebuah objek (misalnya <code>ActionEvent</code>). Objek ini memuat: siapa yang menekan, jam berapa, tombol apa yang ditekan, dsb.
         </li>
         <li>
-          <strong>Event Listener (Pendengar Kejadian):</strong> Interface yang bertugas "menunggu" dan mengeksekusi kode perintah saat kejadian tiba (misalnya <code>ActionListener</code>).
+          <strong>3. Event Listener (Pendengar Kejadian):</strong> Barista di dalam kafe yang telinganya siap mendengar bel pintu. Begitu sinyal tiba, barista segera bergerak membuatkan pesanan (method <code>actionPerformed()</code> dieksekusi).
         </li>
-      </ol>
+      </ul>
 
-      <h2>2. Dua Gaya Menulis ActionListener: Anonymous Class vs Lambda</h2>
-      <p>
-        Di masa lalu (Java 7 ke bawah), setiap kali ingin menangani klik tombol, pemrogram terpaksa mengetik class anonim yang panjang:
-      </p>
-      <p style="background: var(--bg-surface); padding: 0.65rem 1rem; border-left: 3px solid #94a3b8; font-family: monospace;">
-        // Gaya Lama: Anonymous Inner Class (Bertele-tele)<br>
-        btn.addActionListener(new ActionListener() {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;@Override<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;public void actionPerformed(ActionEvent e) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("Tombol diklik!");<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        });
-      </p>
-      <p>
-        Sejak Java 8, karena <code>ActionListener</code> adalah <strong>Functional Interface</strong> (hanya memiliki tepat satu method abstract), kita dapat menyingkatnya secara dramatis menggunakan <strong>Lambda Expression</strong>:
-      </p>
-      <p style="background: var(--callout-tip-bg); padding: 0.65rem 1rem; border-left: 3px solid var(--callout-tip-border); font-family: monospace; color: var(--callout-tip-text);">
-        // Gaya Modern: Lambda Expression (Ringkas & Elegan)<br>
-        btn.addActionListener(e -> {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("Tombol diklik!");<br>
-        });
-      </p>
+      <!-- SVG Event Flow Diagram -->
+      <div class="event-flow-diagram">
+        <div style="font-weight: 700; font-size: 0.95rem; color: var(--primary); text-align: center;">
+          Siklus Arsitektur Event Dispatching di Java Swing
+        </div>
+        <div class="event-flow-steps">
+          <div class="flow-step-node active-step">
+            <div class="flow-step-num">Langkah 1</div>
+            <div class="flow-step-title">Pengguna (User)</div>
+            <div class="flow-step-desc">Klik tombol / Tekan keyboard</div>
+          </div>
+          <div class="flow-arrow-icon">&rarr;</div>
+          <div class="flow-step-node">
+            <div class="flow-step-num">Langkah 2</div>
+            <div class="flow-step-title">Event Source</div>
+            <div class="flow-step-desc">JButton / JTextField membuat Event Object</div>
+          </div>
+          <div class="flow-arrow-icon">&rarr;</div>
+          <div class="flow-step-node">
+            <div class="flow-step-num">Langkah 3</div>
+            <div class="flow-step-title">Event Queue (EDT)</div>
+            <div class="flow-step-desc">JVM antrekan event di Dispatch Thread</div>
+          </div>
+          <div class="flow-arrow-icon">&rarr;</div>
+          <div class="flow-step-node active-step">
+            <div class="flow-step-num">Langkah 4</div>
+            <div class="flow-step-title">Event Listener</div>
+            <div class="flow-step-desc">Method interface listener dipanggil</div>
+          </div>
+        </div>
+      </div>
 
-      <h2>3. Membaca Status CheckBox: isSelected()</h2>
+      <h2>2. Hubungan dengan OOP: Listener Adalah Interface!</h2>
       <p>
-        Untuk mengetahui apakah pelanggan memesan opsi tambahan, panggil method <code>isSelected()</code> pada objek <code>JCheckBox</code>:
+        Banyak pemula mengira <code>addActionListener</code> adalah "mantra ajaib". Padahal, ini adalah <strong>penerapan murni dari materi Interface & Polimorfisme</strong> yang telah Anda pelajari pada Modul 2!
       </p>
-      <p style="background: var(--bg-surface); padding: 0.65rem 1rem; border-left: 3px solid var(--primary-light); font-family: monospace;">
-        boolean inginVanilla = chkSyrupVanilla.isSelected();<br>
-        if (inginVanilla) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;totalHarga += 4000;<br>
-        }
-      </p>
+      <div class="callout callout-info">
+        <div class="callout-header">💡 Mengapa Java Swing Menggunakan Interface untuk Event?</div>
+        <p>
+          Bayangkan jika Java menggunakan pewarisan kelas (<em>Inheritance</em>) untuk listener: karena Java hanya mendukung *Single Inheritance*, kelas <code>MainFrame</code> Anda tidak akan bisa mewarisi <code>JFrame</code> sekaligus mewarisi <code>ButtonListener</code>!
+        </p>
+        <p>
+          Dengan menggunakan <strong>Interface</strong> (<em>Observer Pattern</em>):
+        </p>
+        <ul style="margin-bottom: 0;">
+          <li><strong>Loose Coupling (Keterikatan Longgar):</strong> Tombol <code>JButton</code> tidak perlu tahu siapa yang mendengarkannya. Ia hanya tahu: <em>"Siapapun objek yang mendaftar ke saya asalkan mengimplementasikan kontrak interface <code>ActionListener</code>, saya jamin akan memanggil method <code>actionPerformed()</code>-nya saat saya diklik!"</em></li>
+          <li><strong>Multiple Implementations:</strong> Satu kelas window di Java bebas mengimplementasikan 3, 5, atau 10 interface listener sekaligus (misal: <code>implements ActionListener, ItemListener, WindowListener</code>).</li>
+        </ul>
+      </div>
 
-      <h2>4. Contoh Program: EventHandlingDemo.java</h2>
-      <p>Bandingkan kedua teknik penulisan listener dan pelajari cara reset checkbox:</p>
+      <h2>3. Anatomi Objek Event: Menggali Informasi Aksi</h2>
+      <p>
+        Method pada interface listener selalu menerima parameter berupa objek event (misal <code>ActionEvent e</code>, <code>MouseEvent e</code>, <code>KeyEvent e</code>). Objek ini membawa method-method sakti:
+      </p>
+      <ul>
+        <li><code>e.getSource()</code>: Mengembalikan referensi objek komponen pemancar aksi (bertipe <code>Object</code>). Dapat dibandingkan dengan operator <code>==</code> untuk mendeteksi komponen mana yang diklik: <code>if (e.getSource() == btnPesan)</code>.</li>
+        <li><code>e.getActionCommand()</code>: Mengembalikan teks perintah (String). Secara default bernilai sama dengan teks pada tombol, kecuali diubah via <code>btn.setActionCommand("KODE_AKSI")</code>.</li>
+        <li><code>e.getX()</code> dan <code>e.getY()</code>: (Pada <code>MouseEvent</code>) Mengembalikan titik koordinat piksel kursor mouse saat aksi berlangsung.</li>
+        <li><code>e.getKeyChar()</code> dan <code>e.getKeyCode()</code>: (Pada <code>KeyEvent</code>) Mengetahui karakter huruf atau kode tombol hardware keyboard yang ditekan.</li>
+      </ul>
+
+      <h2>4. Empat Cara Menulis Listener pada Kasus yang Sama</h2>
+      <p>
+        Mari kita pelajari 4 cara berbeda dalam mengimplementasikan <code>ActionListener</code> pada satu studi kasus kecil yang identik: <strong>Counter Penambahan Porsi Kopi Espresso JavaCafe</strong>.
+      </p>
 
       
     <div class="code-wrapper">
       <div class="code-header">
-        <span class="file-name">📄 EventHandlingDemo.java</span>
+        <span class="file-name">📄 EmpatGayaListenerDemo.java</span>
         <button class="copy-btn" type="button">Salin Kode</button>
       </div>
       <pre><code class="language-java">package examples.eventhandling;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -2234,167 +2281,329 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Contoh 09: EventHandlingDemo
- * Membandingkan Anonymous Inner Class vs Lambda Expression dalam ActionListener,
- * serta membaca kondisi isSelected() pada JCheckBox.
+ * Contoh 09A: EmpatGayaListenerDemo
+ * Menunjukkan 4 cara berbeda dalam menulis ActionListener untuk kasus yang sama:
+ * Counter Tambah Porsi Kopi JavaCafe.
+ *
+ * Gaya 1: Named Class terpisah (Outer / Inner Class biasa)
+ * Gaya 2: Frame/Panel itu sendiri (implements ActionListener)
+ * Gaya 3: Anonymous Inner Class
+ * Gaya 4: Lambda Expression &amp; Method Reference
  */
-public class EventHandlingDemo extends JFrame {
+public class EmpatGayaListenerDemo extends JFrame implements ActionListener {
 
-    private JCheckBox chkSyrupVanilla;
-    private JCheckBox chkJellyBoba;
-    private JButton btnCekAnonymous;
-    private JButton btnCekLambda;
-    private JButton btnResetPilihan;
-    private JLabel lblHasil;
+    private int jumlahPorsi = 0;
+    private JLabel lblCounter;
+    private JLabel lblStatusGaya;
 
-    public EventHandlingDemo() {
-        super(&quot;Event Handling &amp; ActionListener - JavaCafe&quot;);
-        setSize(520, 350);
+    // Tombol untuk masing-masing gaya
+    private JButton btnGaya1; // Named Class
+    private JButton btnGaya2; // Implements di Frame
+    private JButton btnGaya3; // Anonymous Inner Class
+    private JButton btnGaya4; // Lambda Expression
+    private JButton btnReset; // Method Reference
+
+    public EmpatGayaListenerDemo() {
+        super(&quot;Perbandingan 4 Gaya Penulisan Listener - JavaCafe&quot;);
+        setSize(540, 380);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
         initComponents();
-        setupEvents();
+        setupListeners();
     }
 
     private void initComponents() {
-        JPanel panel = new JPanel(new GridLayout(6, 1, 6, 6));
-        panel.setBackground(new Color(248, 250, 252));
+        JPanel root = new JPanel(new BorderLayout(10, 10));
+        root.setBackground(new Color(248, 250, 252));
 
-        JLabel title = new JLabel(&quot;Demo Event Handling (Topping Kopi)&quot;, SwingConstants.CENTER);
-        title.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 15));
+        // Header Counter
+        JPanel pnlHeader = new JPanel(new GridLayout(2, 1, 4, 4));
+        pnlHeader.setBackground(new Color(30, 58, 138));
 
-        chkSyrupVanilla = new JCheckBox(&quot;Sirup Vanilla (+Rp 4.000)&quot;);
-        chkJellyBoba = new JCheckBox(&quot;Jelly Boba (+Rp 5.000)&quot;);
+        JLabel lblJudul = new JLabel(&quot;Pemesanan Espresso Shot&quot;, SwingConstants.CENTER);
+        lblJudul.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 15));
+        lblJudul.setForeground(Color.WHITE);
 
-        btnCekAnonymous = new JButton(&quot;Periksa Pilihan (Cara 1: Anonymous Class)&quot;);
-        btnCekLambda = new JButton(&quot;Periksa Pilihan (Cara 2: Lambda Expression)&quot;);
-        btnResetPilihan = new JButton(&quot;Reset Semua CheckBox&quot;);
+        lblCounter = new JLabel(&quot;Total Porsi: 0 Cup&quot;, SwingConstants.CENTER);
+        lblCounter.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 20));
+        lblCounter.setForeground(new Color(251, 191, 36)); // Amber Gold
 
-        lblHasil = new JLabel(&quot;Status: Belum ada event yang dipicu&quot;, SwingConstants.CENTER);
-        lblHasil.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 13));
-        lblHasil.setForeground(new Color(30, 58, 138));
+        pnlHeader.add(lblJudul);
+        pnlHeader.add(lblCounter);
 
-        panel.add(title);
-        panel.add(chkSyrupVanilla);
-        panel.add(chkJellyBoba);
-        panel.add(btnCekAnonymous);
-        panel.add(btnCekLambda);
-        panel.add(btnResetPilihan);
+        // Body Buttons (Grid 5 baris)
+        JPanel pnlButtons = new JPanel(new GridLayout(5, 1, 8, 8));
+        pnlButtons.setBackground(new Color(248, 250, 252));
 
-        add(panel);
+        btnGaya1 = new JButton(&quot;1. Tambah via Named Class (Kelas Terpisah)&quot;);
+        btnGaya2 = new JButton(&quot;2. Tambah via Implements Frame (this)&quot;);
+        btnGaya3 = new JButton(&quot;3. Tambah via Anonymous Inner Class&quot;);
+        btnGaya4 = new JButton(&quot;4. Tambah via Lambda Expression (e -&gt; ...)&quot;);
+        btnReset = new JButton(&quot;5. Reset Porsi via Method Reference (this::reset)&quot;);
+
+        btnGaya2.setActionCommand(&quot;TAMBAH_GAYA_2&quot;);
+        btnReset.setBackground(new Color(239, 68, 68));
+        btnReset.setForeground(Color.WHITE);
+
+        pnlButtons.add(btnGaya1);
+        pnlButtons.add(btnGaya2);
+        pnlButtons.add(btnGaya3);
+        pnlButtons.add(btnGaya4);
+        pnlButtons.add(btnReset);
+
+        // Footer Status
+        lblStatusGaya = new JLabel(&quot;Pemicu Terakhir: Belum ada tombol ditekan&quot;, SwingConstants.CENTER);
+        lblStatusGaya.setFont(new Font(&quot;Segoe UI&quot;, Font.ITALIC, 12));
+        lblStatusGaya.setForeground(new Color(100, 116, 139));
+
+        root.add(pnlHeader, BorderLayout.NORTH);
+        root.add(pnlButtons, BorderLayout.CENTER);
+        root.add(lblStatusGaya, BorderLayout.SOUTH);
+
+        add(root);
     }
 
-    private void setupEvents() {
-        // Cara 1: Menggunakan Anonymous Inner Class (Gaya Lama Java 7 ke bawah)
-        btnCekAnonymous.addActionListener(new ActionListener() {
+    private void setupListeners() {
+        // =====================================================================
+        // GAYA 1: Named Class Terpisah
+        // Menggunakan objek dari kelas khusus yang mengimplementasikan ActionListener.
+        // =====================================================================
+        btnGaya1.addActionListener(new TambahPorsiNamedHandler(this));
+
+        // =====================================================================
+        // GAYA 2: Frame Itu Sendiri Mengimplementasikan ActionListener
+        // Melewatkan &#x27;this&#x27; ke addActionListener. Method actionPerformed()
+        // milik frame ini yang akan dieksekusi saat tombol diklik.
+        // =====================================================================
+        btnGaya2.addActionListener(this);
+
+        // =====================================================================
+        // GAYA 3: Anonymous Inner Class
+        // Menginstansiasi objek anonim dari interface ActionListener di tempat.
+        // =====================================================================
+        btnGaya3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean vanilla = chkSyrupVanilla.isSelected();
-                boolean boba = chkJellyBoba.isSelected();
-                lblHasil.setText(&quot;[Anonymous] Vanilla: &quot; + vanilla + &quot; | Boba: &quot; + boba);
+                tambahPorsi();
+                lblStatusGaya.setText(&quot;Pemicu: Gaya 3 (Anonymous Inner Class)&quot;);
             }
         });
 
-        // Cara 2: Menggunakan Lambda Expression (Modern, Ringkas, Standar Java 8+)
-        btnCekLambda.addActionListener(e -&gt; {
-            boolean vanilla = chkSyrupVanilla.isSelected();
-            boolean boba = chkJellyBoba.isSelected();
-            lblHasil.setText(&quot;[Lambda] Vanilla: &quot; + vanilla + &quot; | Boba: &quot; + boba);
+        // =====================================================================
+        // GAYA 4: Lambda Expression (Standar Modern Java 8+)
+        // Paling ringkas karena ActionListener adalah Functional Interface (SAM).
+        // =====================================================================
+        btnGaya4.addActionListener(e -&gt; {
+            tambahPorsi();
+            lblStatusGaya.setText(&quot;Pemicu: Gaya 4 (Lambda Expression)&quot;);
         });
 
-        // Event untuk Reset: Mengembalikan state CheckBox ke tidak tercentang
-        btnResetPilihan.addActionListener(e -&gt; {
-            chkSyrupVanilla.setSelected(false);
-            chkJellyBoba.setSelected(false);
-            lblHasil.setText(&quot;Pilihan telah di-reset!&quot;);
-        });
+        // =====================================================================
+        // BONUS GAYA 4b: Method Reference (this::resetPorsi)
+        // Menunjuk langsung ke method yang memiliki signature kompatibel.
+        // =====================================================================
+        btnReset.addActionListener(this::resetPorsi);
+    }
+
+    // Method pembantu untuk menambah porsi
+    public void tambahPorsi() {
+        jumlahPorsi++;
+        perbaruiLabelCounter();
+    }
+
+    // Method pembantu yang dipanggil oleh Method Reference
+    private void resetPorsi(ActionEvent e) {
+        jumlahPorsi = 0;
+        perbaruiLabelCounter();
+        lblStatusGaya.setText(&quot;Pemicu: Method Reference (Reset ke 0)&quot;);
+    }
+
+    private void perbaruiLabelCounter() {
+        lblCounter.setText(&quot;Total Porsi: &quot; + jumlahPorsi + &quot; Cup&quot;);
+    }
+
+    public void setStatusGaya(String status) {
+        lblStatusGaya.setText(status);
+    }
+
+    // =========================================================================
+    // Implementasi Method dari Interface ActionListener (untuk GAYA 2)
+    // Menunjukkan cara SATU listener melayani banyak tombol via getSource() / getActionCommand()
+    // =========================================================================
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Cara A: Memeriksa referensi objek sumber (e.getSource() == btnGaya2)
+        if (e.getSource() == btnGaya2) {
+            tambahPorsi();
+            lblStatusGaya.setText(&quot;Pemicu: Gaya 2 (Frame implements ActionListener - getSource)&quot;);
+        }
+
+        // Cara B: Memeriksa ActionCommand String (Wajib pakai .equals, BUKAN == !)
+        if (&quot;TAMBAH_GAYA_2&quot;.equals(e.getActionCommand())) {
+            // Bisa digunakan jika tombol tidak disimpan sebagai atribut kelas
+        }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -&gt; new EventHandlingDemo().setVisible(true));
+        SwingUtilities.invokeLater(() -&gt; new EmpatGayaListenerDemo().setVisible(true));
+    }
+}
+
+/**
+ * Kelas terpisah untuk GAYA 1 (Named Class)
+ * Menerima referensi frame agar dapat memanggil method pada frame.
+ */
+class TambahPorsiNamedHandler implements ActionListener {
+    private final EmpatGayaListenerDemo frame;
+
+    public TambahPorsiNamedHandler(EmpatGayaListenerDemo frame) {
+        this.frame = frame;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        frame.tambahPorsi();
+        frame.setStatusGaya(&quot;Pemicu: Gaya 1 (Named Class TambahPorsiNamedHandler)&quot;);
     }
 }
 </code></pre>
     </div>
     
 
-      <!-- Mockup Visual -->
-      <div class="swing-mockup-container">
-        <div class="swing-window" style="max-width: 500px;">
-          <div class="swing-titlebar">
-            <span class="swing-titlebar-title">☕ Event Handling & ActionListener - JavaCafe</span>
-            <div class="swing-window-controls">
-              <span class="swing-ctrl-dot swing-ctrl-min"></span>
-              <span class="swing-ctrl-dot swing-ctrl-max"></span>
-              <span class="swing-ctrl-dot swing-ctrl-close"></span>
-            </div>
-          </div>
-          <div class="swing-body" style="background: #f8fafc; padding: 1.25rem; gap: 0.6rem;">
-            <p style="font-weight: 700; color: #0f172a; text-align: center; font-size: 0.95rem;">
-              Demo Event Handling (Topping Kopi)
-            </p>
-            <div class="swing-checkbox-row">
-              <span class="swing-checkbox-box checked">✓</span>
-              <span>Sirup Vanilla (+Rp 4.000)</span>
-            </div>
-            <div class="swing-checkbox-row">
-              <span class="swing-checkbox-box"></span>
-              <span>Jelly Boba (+Rp 5.000)</span>
-            </div>
-            <button class="swing-btn" type="button" style="width: 100%;">
-              Periksa Pilihan (Cara 1: Anonymous Class)
-            </button>
-            <button class="swing-btn swing-btn-primary" type="button" style="width: 100%;">
-              Periksa Pilihan (Cara 2: Lambda Expression)
-            </button>
-            <button class="swing-btn" type="button" style="width: 100%;">
-              Reset Semua CheckBox
-            </button>
-            <p style="font-weight: 700; color: #1e3a8a; text-align: center; font-size: 0.88rem; margin-top: 0.25rem;">
-              [Lambda] Vanilla: true | Boba: false
-            </p>
-          </div>
-        </div>
-        <div class="mockup-caption">Visualisasi Respon Label Hasil saat Tombol Lambda Diklik</div>
+      <h2>5. Matriks Perbandingan 4 Gaya Penulisan Listener</h2>
+      <div style="overflow-x: auto;">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Gaya Penulisan</th>
+              <th>Kelebihan</th>
+              <th>Kekurangan</th>
+              <th>Kapan Tepat Digunakan?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Named Class (Kelas Terpisah)</strong></td>
+              <td>Dapat digunakan ulang (reusable) di banyak tempat; memisahkan tampilan dengan logika bisnis secara tegas.</td>
+              <td>Butuh mengoper referensi frame lewat constructor; file kode bertambah banyak.</td>
+              <td>Logika aksi sangat panjang, rumit, atau perlu dipakai oleh beberapa form berbeda.</td>
+            </tr>
+            <tr>
+              <td><strong>2. Implements di Frame (this)</strong></td>
+              <td>Semua penanganan tombol terpusat di satu method <code>actionPerformed()</code>; tidak memakan alokasi objek baru.</td>
+              <td>Method <code>actionPerformed()</code> menjadi sarang blok <code>if-else</code> panjang jika tombolnya ada puluhan.</td>
+              <td>Form kasir sederhana dengan 2–4 tombol aksi terpusat.</td>
+            </tr>
+            <tr>
+              <td><strong>3. Anonymous Inner Class</strong></td>
+              <td>Logika aksi berada tepat di samping komponen tombol yang relevan; kompatibel di Java versi lama (Java 7 ke bawah).</td>
+              <td>Sintaks bertele-tele (boilerplate code) dengan deklarasi kelas dan override method.</td>
+              <td>Proyek warisan Java lama atau listener yang memiliki lebih dari 1 method abstract.</td>
+            </tr>
+            <tr>
+              <td><strong>4. Lambda Expression & Method Ref</strong></td>
+              <td><strong>Paling ringkas, modern, dan ekspresif.</strong> Mengeliminasi baris kode boilerplate; mudah dibaca.</td>
+              <td>Hanya bisa digunakan pada <em>Functional Interface</em> (interface dengan tepat 1 abstract method).</td>
+              <td><strong>Rekomendasi Utama Standar Modern (Java 8+)</strong> untuk aksi tombol 1–5 baris.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="callout callout-tip">
-        <div class="callout-header">💡 Satu Baris Lambda Tanpa Kurung Kurawal</div>
+        <div class="callout-header">💡 Rekomendasi Asisten untuk Praktikan</div>
         <p>
-          Jika aksi di dalam event listener hanya terdiri dari satu baris instruksi saja, Anda bahkan boleh menghilangkan kurung kurawal <code>{ }</code>:
-          <code>btnReset.addActionListener(e -> chkVanilla.setSelected(false));</code>.
+          Gunakan <strong>Gaya 4 (Lambda Expression)</strong> untuk aksi tombol ringkas: <code>btn.addActionListener(e -> hitungTotal());</code>. Jika aksi membutuhkan pengecekan banyak kondisi, buat method pembantu (seperti <code>hitungTotal()</code>) lalu panggil method tersebut dari dalam lambda!
         </p>
+      </div>
+
+      <h2>6. Satu Listener Melayani Banyak Tombol: getSource() vs getActionCommand()</h2>
+      <p>
+        Jika Anda menggunakan Gaya 2 (atau satu lambda untuk beberapa tombol), Anda perlu membedakan tombol mana yang sedang ditekan:
+      </p>
+
+      <div class="code-wrapper">
+        <div class="code-header">
+          <span class="file-name">Pembedaan Sumber Aksi</span>
+        </div>
+        <pre><code class="language-java">// CARA 1: Menggunakan getSource() (Membandingkan referensi objek komponen)
+if (e.getSource() == btnTambah) {
+    tambahPorsi();
+} else if (e.getSource() == btnReset) {
+    resetPorsi();
+}
+
+// CARA 2: Menggunakan getActionCommand() (Membandingkan string perintah)
+String cmd = e.getActionCommand();
+if ("TAMBAH".equals(cmd)) {
+    tambahPorsi();
+} else if ("RESET".equals(cmd)) {
+    resetPorsi();
+}</code></pre>
       </div>
 
       <div class="callout callout-warn">
-        <div class="callout-header">⚠️ Awas: Lupa addActionListener!</div>
+        <div class="callout-header">⚠️ Awas: Jebakan == vs .equals() pada String!</div>
         <p>
-          Salah satu bug paling menggelikan bagi pemula: tombol sudah dibuat dengan indah, method logika hitung sudah ditulis dengan sempurna, namun saat tombol diklik di layar tidak terjadi apa-apa sama sekali! Penyebabnya: programmer lupa memanggil baris <code>btn.addActionListener(...)</code>. Selalu periksa keterhubungan listener Anda!
+          <strong>Jangan pernah menulis:</strong> <code>if (e.getActionCommand() == "TAMBAH")</code>!<br>
+          Operator <code>==</code> di Java membandingkan alamat memori (referensi objek). Jika String berasal dari input runtime yang berbeda, kondisi tersebut akan bernilai <code>false</code> meskipun teksnya bertuliskan "TAMBAH"!<br>
+          <strong>Gunakan selalu:</strong> <code>"TAMBAH".equals(e.getActionCommand())</code>.
         </p>
       </div>
 
+      <!-- Mockup Visual -->
+      <div class="swing-mockup-container">
+        <div class="swing-window" style="max-width: 520px; height: 320px;">
+          <div class="swing-titlebar">
+            <span class="swing-titlebar-title">☕ Perbandingan 4 Gaya Penulisan Listener - JavaCafe</span>
+            <div class="swing-window-controls">
+              <span class="swing-ctrl-dot swing-ctrl-min"></span>
+              <span class="swing-ctrl-dot swing-ctrl-close"></span>
+            </div>
+          </div>
+          <div class="swing-body" style="background: #f8fafc; padding: 1rem; justify-content: space-between;">
+            <div style="background: #1e3a8a; color: white; border-radius: 6px; padding: 0.6rem; text-align: center;">
+              <span style="font-size: 0.85rem; opacity: 0.9;">Pemesanan Espresso Shot</span><br>
+              <strong style="font-size: 1.35rem; color: #fbbf24;">Total Porsi: 4 Cup</strong>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <button class="swing-btn" type="button">1. Tambah via Named Class (Kelas Terpisah)</button>
+              <button class="swing-btn" type="button">2. Tambah via Implements Frame (this)</button>
+              <button class="swing-btn" type="button">3. Tambah via Anonymous Inner Class</button>
+              <button class="swing-btn swing-btn-primary" type="button">4. Tambah via Lambda Expression (e -> ...)</button>
+              <button class="swing-btn" type="button" style="background: #ef4444; color: white; border-color: #ef4444;">5. Reset Porsi via Method Reference</button>
+            </div>
+            <div style="font-size: 0.78rem; color: #64748b; font-style: italic; text-align: center;">
+              Pemicu Terakhir: Gaya 4 (Lambda Expression)
+            </div>
+          </div>
+        </div>
+        <div class="mockup-caption">Visualisasi Tampilan Program EmpatGayaListenerDemo.java</div>
+      </div>
+
       <div class="practice-box">
-        <div class="practice-header">✏️ Latihan Mandiri 9.1</div>
+        <div class="practice-header">✏️ Latihan Mandiri 9A.1</div>
         <p>
-          Pasang listener langsung pada objek <code>JCheckBox</code> (bukan tombol) menggunakan <code>chkSyrupVanilla.addActionListener(...)</code>, sehingga setiap kali kotak dicentang atau dihilangkan centangnya oleh mouse, label status langsung berubah secara otomatis seketika itu juga!
+          Tambahkan tombol keenam pada <code>EmpatGayaListenerDemo.java</code> bernama <code>btnKurang</code> (Kurang 1 Porsi). Implementasikan tombol tersebut menggunakan <strong>Gaya 4 (Lambda Expression)</strong> dengan aturan: porsi tidak boleh berkurang di bawah 0!
         </p>
         <details class="hint-details">
           <summary>💡 Butuh Petunjuk?</summary>
           <div class="hint-content">
-            Ya! <code>JCheckBox</code> juga mendukung <code>addActionListener</code>. Cukup tulis: <code>chkSyrupVanilla.addActionListener(e -> lblHasil.setText("Status Vanilla: " + chkSyrupVanilla.isSelected()));</code>.
+            Tambahkan <code>JButton btnKurang = new JButton("Kurangi Porsi");</code>. Pasang listener:
+            <code>btnKurang.addActionListener(e -> { if (jumlahPorsi > 0) { jumlahPorsi--; perbaruiLabelCounter(); } });</code>.
           </div>
         </details>
       </div>
 
       <div class="summary-card">
-        <div class="summary-title">📝 Ringkasan Bab 9</div>
+        <div class="summary-title">📝 Ringkasan Bab 09A</div>
         <ul class="summary-list">
-          <li>Interaktivitas diatur melalui <strong>Event Source</strong> (komponen), <strong>Event Object</strong> (kejadian), dan <strong>Event Listener</strong> (penanganan aksi).</li>
-          <li>Gunakan selalu <strong>Lambda Expression</strong> (<code>e -> { ... }</code>) untuk kode event handler yang bersih dan modern.</li>
-          <li>Periksa kondisi pilihan checkbox melalui method <code>isSelected()</code> dan setel kembali statusnya via <code>setSelected(boolean)</code>.</li>
-          <li>Pastikan setiap tombol telah dipasangi <code>addActionListener</code> agar dapat merespon interaksi pengguna.</li>
+          <li>Event Handling di Swing adalah implementasi nyata dari <strong>Interface & Observer Pattern</strong> di OOP.</li>
+          <li>Tripartit Event: <strong>Event Source</strong> (pemancar), <strong>Event Object</strong> (fakta kejadian), dan <strong>Event Listener</strong> (penanganan aksi).</li>
+          <li>Empat gaya penulisan: Named Class, Implements Frame, Anonymous Inner Class, dan <strong>Lambda Expression</strong> (rekomendasi modern).</li>
+          <li>Selalu gunakan <code>.equals()</code> saat membandingkan teks string pada <code>getActionCommand()</code>.</li>
         </ul>
       </div>
 
@@ -2402,6 +2611,1643 @@ public class EventHandlingDemo extends JFrame {
         <a href="#bab-8" class="btn-nav-chapter btn-nav-prev">
           <span class="nav-dir">← Sebelumnya</span>
           <span class="nav-title">Bab 8: Kerapian Tampilan: Border</span>
+        </a>
+        
+        <a href="#bab-9b" class="btn-nav-chapter btn-nav-next">
+          <span class="nav-dir">Berikutnya →</span>
+          <span class="nav-title">Bab 09B: Katalog Listener & Adapter</span>
+        </a>
+        </div>
+    </article>
+    
+      
+    <article class="chapter-article" id="bab-9b">
+      <div class="chapter-badge">Bab 09B • Katalog Interface</div>
+      <h1 class="chapter-title">Katalog Lengkap Interface Listener & Adapter Class</h1>
+      <p class="chapter-lead">
+        Menjelajahi ragam interface listener untuk berbagai interaksi pengguna: perubahan status item, gestur mouse, ketikan keyboard, fokus kursor, pergeseran slider, hingga siklus hidup jendela, serta bagaimana Adapter Class membebaskan kita dari penulisan method kosong.
+      </p>
+
+      <div class="objectives-card">
+        <div class="objectives-title">🎯 Tujuan Pembelajaran</div>
+        <ul class="objectives-list">
+          <li>Menguasai 10 interface listener esensial di Swing beserta komponen pasangannya.</li>
+          <li>Membedakan status seleksi pada <code>ItemListener</code> via <code>ItemEvent.SELECTED</code> vs <code>DESELECTED</code>.</li>
+          <li>Menangkap gestur fisik pengguna menggunakan <code>MouseListener</code>, <code>MouseMotionListener</code>, dan <code>KeyListener</code>.</li>
+          <li>Memahami fungsi dan cara kerja <strong>Adapter Classes</strong> (<code>MouseAdapter</code>, <code>KeyAdapter</code>, <code>WindowAdapter</code>, <code>FocusAdapter</code>).</li>
+        </ul>
+      </div>
+
+      <h2>1. Mengapa Ada Banyak Jenis Listener di Java Swing?</h2>
+      <p>
+        Setiap komponen visual memiliki jenis interaksi yang berbeda:
+        Sebuah tombol diklik (Action), sebuah kotak centang diubah statusnya (Item), kursor mouse melintas di atas gambar (Mouse), atau pengguna mengetik angka di kolom input (Key/Document).
+        Karena itu, Java Swing menyediakan antarmuka spesifik untuk masing-masing kebutuhan.
+      </p>
+
+      <h2>2. Katalog Interface Listener Esensial</h2>
+
+      <!-- Sub-bab 1: ActionListener -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>🔘</span> 1. ActionListener (Aksi Penekanan Utama)
+        </h3>
+        <p><strong>Kapan Dipakai:</strong> Saat pengguna menekan tombol <code>JButton</code>, menekan tombol <strong>Enter</strong> di <code>JTextField</code>, memilih menu di <code>JMenuItem</code>, atau memilih opsi di <code>JComboBox</code>.</p>
+        <p><strong>Daftar Method:</strong> Hanya memiliki 1 method: <code>void actionPerformed(ActionEvent e)</code>.</p>
+        <div class="code-wrapper">
+          <pre><code class="language-java">// Menangani aksi Enter pada kolom pencarian
+txtCari.addActionListener(e -> {
+    String kataKunci = txtCari.getText();
+    System.out.println("Mencari menu: " + kataKunci);
+});</code></pre>
+        </div>
+        <p style="color: var(--callout-warn-text); font-size: 0.85rem; margin-bottom: 0;">
+          <strong>⚠️ Jebakan Umum:</strong> Lupa memanggil <code>addActionListener</code> sehingga tombol terasa bisu dan tidak merespon saat diklik.
+        </p>
+      </div>
+
+      <!-- Sub-bab 2: ItemListener -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>☑️</span> 2. ItemListener (Perubahan Status Seleksi)
+        </h3>
+        <p><strong>Kapan Dipakai:</strong> Pada komponen yang memiliki status biner (terpilih / tidak terpilih): <code>JCheckBox</code>, <code>JRadioButton</code>, atau pemilihan item di <code>JComboBox</code>.</p>
+        <p><strong>Daftar Method:</strong> <code>void itemStateChanged(ItemEvent e)</code>.</p>
+        <div class="code-wrapper">
+          <pre><code class="language-java">chkOatMilk.addItemListener(e -> {
+    if (e.getStateChange() == ItemEvent.SELECTED) {
+        System.out.println("Susu Oat ditambahkan (+Rp 6.000)");
+    } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+        System.out.println("Susu Oat dibatalkan");
+    }
+});</code></pre>
+        </div>
+        <p style="color: var(--callout-warn-text); font-size: 0.85rem; margin-bottom: 0;">
+          <strong>⚠️ Jebakan Umum:</strong> Mengira <code>itemStateChanged()</code> hanya dipanggil saat mencentang. Padahal method ini dipanggil <strong>DUA KALI</strong> saat pengguna mengganti pilihan RadioButton (1x untuk deselect item lama, 1x untuk select item baru). Selalu periksa dengan <code>e.getStateChange() == ItemEvent.SELECTED</code>!
+        </p>
+      </div>
+
+      <!-- Sub-bab 3 & 4: MouseListener & MouseMotionListener -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>🖱️</span> 3 & 4. MouseListener & MouseMotionListener (Gestur Kursor)
+        </h3>
+        <p><strong>Kapan Dipakai:</strong> Menghasilkan efek visual interaktif saat kursor melintas di atas kartu produk (hover), mendeteksi klik ganda (*double click*), atau menggambar pola latte art pada panel kanvas.</p>
+        <p><strong>Daftar Method MouseListener:</strong></p>
+        <ul style="margin-bottom: 0.5rem; font-family: monospace; font-size: 0.85rem;">
+          <li>mouseClicked(MouseEvent e) - Terjadi setelah siklus pressed & released tuntas di titik yang sama</li>
+          <li>mousePressed(MouseEvent e) - Tombol mouse mulai ditekan ke bawah</li>
+          <li>mouseReleased(MouseEvent e) - Tombol mouse dilepaskan ke atas</li>
+          <li>mouseEntered(MouseEvent e) - Kursor mouse memasuki area batas komponen</li>
+          <li>mouseExited(MouseEvent e) - Kursor mouse keluar meninggalkan area komponen</li>
+        </ul>
+        <p><strong>Daftar Method MouseMotionListener:</strong></p>
+        <ul style="margin-bottom: 0.5rem; font-family: monospace; font-size: 0.85rem;">
+          <li>mouseMoved(MouseEvent e) - Kursor digerakkan di atas komponen</li>
+          <li>mouseDragged(MouseEvent e) - Kursor digerakkan sambil menahan tombol klik</li>
+        </ul>
+      </div>
+
+      <!-- Sub-bab 5: KeyListener -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>⌨️</span> 5. KeyListener (Ketikan Keyboard)
+        </h3>
+        <p><strong>Kapan Dipakai:</strong> Memfilter karakter input (misal: nomor meja hanya boleh angka), shortcut keyboard (Esc untuk membatalkan form), atau navigasi game.</p>
+        <p><strong>Daftar Method:</strong></p>
+        <ul style="margin-bottom: 0.5rem; font-family: monospace; font-size: 0.85rem;">
+          <li>keyPressed(KeyEvent e) - Tombol fisik ditekan (menghasilkan getKeyCode() mis. VK_ENTER, VK_F1, VK_ESCAPE)</li>
+          <li>keyTyped(KeyEvent e) - Karakter teks unicode dihasilkan (menghasilkan getKeyChar() mis. 'a', '9', '%')</li>
+          <li>keyReleased(KeyEvent e) - Tombol fisik dilepas</li>
+        </ul>
+        <div class="code-wrapper">
+          <pre><code class="language-java">// Memfilter input agar hanya menerima angka:
+txtPorsi.addKeyListener(new KeyAdapter() {
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (!Character.isDigit(c)) {
+            e.consume(); // Batalkan karakter non-angka!
+        }
+    }
+});</code></pre>
+        </div>
+      </div>
+
+      <!-- Sub-bab 6: FocusListener -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>🎯</span> 6. FocusListener (Perpindahan Fokus Kursor)
+        </h3>
+        <p><strong>Kapan Dipakai:</strong> Menciptakan efek teks <em>placeholder</em> bantuan pada kolom input atau memicu validasi saat pengguna selesai mengisi dan berpindah ke kolom berikutnya.</p>
+        <p><strong>Daftar Method:</strong> <code>focusGained(FocusEvent e)</code> dan <code>focusLost(FocusEvent e)</code>.</p>
+      </div>
+
+      <!-- Sub-bab 7: DocumentListener -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>📝</span> 7. DocumentListener (Pemantauan Teks Real-Time)
+        </h3>
+        <p><strong>Kapan Dipakai:</strong> Menghitung sisa karakter catatan pesanan atau memperbarui estimasi subtotal secara live saat teks diketik, di-paste, maupun di-delete.</p>
+        <p><strong>Daftar Method:</strong> <code>insertUpdate(DocumentEvent e)</code>, <code>removeUpdate(DocumentEvent e)</code>, dan <code>changedUpdate(DocumentEvent e)</code>.</p>
+        <p style="color: var(--callout-tip-text); font-size: 0.85rem; margin-bottom: 0;">
+          <strong>💡 Keunggulan Utama:</strong> Berbeda dengan KeyListener, <code>DocumentListener</code> tetap terpicu meskipun teks diubah menggunakan mouse (klik kanan Paste atau Cut)! Pasang selalu via <code>textField.getDocument().addDocumentListener(...)</code>.
+        </p>
+      </div>
+
+      <!-- Sub-bab 8: ChangeListener -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>🎚️</span> 8. ChangeListener (Slider & Spinner Nilai)
+        </h3>
+        <p><strong>Kapan Dipakai:</strong> Memantau pergeseran nilai pada <code>JSlider</code> (tingkat kemanisan gula 0%–100%) atau <code>JSpinner</code> (kuantitas porsi).</p>
+        <p><strong>Daftar Method:</strong> <code>void stateChanged(ChangeEvent e)</code>.</p>
+      </div>
+
+      <!-- Sub-bab 9: ListSelectionListener -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>📋</span> 9. ListSelectionListener (Seleksi Daftar JList)
+        </h3>
+        <p><strong>Kapan Dipakai:</strong> Saat pengguna memilih baris dari daftar <code>JList</code> (misal memilih varian biji kopi: Gayo, Kintamani, Toraja) atau baris pada <code>JTable</code>.</p>
+        <p><strong>Daftar Method:</strong> <code>void valueChanged(ListSelectionEvent e)</code>.</p>
+        <p style="color: var(--callout-warn-text); font-size: 0.85rem; margin-bottom: 0;">
+          <strong>⚠️ Trik Wajib:</strong> Selalu bungkus kode Anda dengan <code>if (!e.getValueIsAdjusting()) { ... }</code> agar aksi tidak dieksekusi ganda saat mouse masih dalam proses klik geser!
+        </p>
+      </div>
+
+      <!-- Sub-bab 10: WindowListener -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+          <span>🪟</span> 10. WindowListener (Siklus Hidup Jendela JFrame)
+        </h3>
+        <p><strong>Kapan Dipakai:</strong> Memunculkan kotak dialog konfirmasi pop-up saat tombol silang (X) ditekan agar transaksi kasir yang belum disimpan tidak hilang tak sengaja.</p>
+        <p><strong>Daftar Method:</strong> <code>windowClosing()</code>, <code>windowOpened()</code>, <code>windowClosed()</code>, <code>windowIconified()</code>, <code>windowDeiconified()</code>, <code>windowActivated()</code>, <code>windowDeactivated()</code>.</p>
+      </div>
+
+      <h2>3. Masalah Interface Bloat & Solusi Penyelamat: Adapter Classes</h2>
+      <p>
+        Mari kita cermati masalah besar pada <code>WindowListener</code>: interface ini memiliki <strong>7 method abstract</strong>. Jika Anda mengimplementasikan interface <code>WindowListener</code> secara langsung hanya untuk menangani <code>windowClosing()</code>, Anda <strong>diwajibkan oleh compiler Java untuk menulis 6 method kosong lainnya</strong>:
+      </p>
+
+      <div class="code-wrapper">
+        <div class="code-header"><span class="file-name">❌ Tanpa Adapter: Mengotori Kode dengan Method Kosong</span></div>
+        <pre><code class="language-java">frame.addWindowListener(new WindowListener() {
+    public void windowClosing(WindowEvent e) { konfirmasiKeluar(); }
+    public void windowOpened(WindowEvent e) {}      // Kosong tak terpakai!
+    public void windowClosed(WindowEvent e) {}      // Kosong tak terpakai!
+    public void windowIconified(WindowEvent e) {}   // Kosong tak terpakai!
+    public void windowDeiconified(WindowEvent e) {} // Kosong tak terpakai!
+    public void windowActivated(WindowEvent e) {}   // Kosong tak terpakai!
+    public void windowDeactivated(WindowEvent e) {} // Kosong tak terpakai!
+});</code></pre>
+      </div>
+
+      <p>
+        Untuk menyelamatkan kita dari kode sampah di atas, Java Swing menyediakan <strong>Adapter Classes</strong> (seperti <code>WindowAdapter</code>, <code>MouseAdapter</code>, <code>KeyAdapter</code>, <code>FocusAdapter</code>).
+      </p>
+      <p>
+        Adapter class adalah <em>abstract class</em> yang sudah mengimplementasikan seluruh method interface dengan kurung kurawal kosong <code>{}</code>. Anda cukup meng-<em>extends</em> adapter tersebut dan <strong>meng-override HANYA SATU method yang Anda butuhkan</strong>!
+      </p>
+
+      <div class="code-wrapper">
+        <div class="code-header"><span class="file-name">✅ Dengan Adapter: Sangat Bersih & Fokus</span></div>
+        <pre><code class="language-java">frame.addWindowListener(new WindowAdapter() {
+    @Override
+    public void windowClosing(WindowEvent e) {
+        konfirmasiKeluar();
+    }
+});</code></pre>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-header">💡 Mengapa ActionListener Tidak Memiliki Adapter?</div>
+        <p>
+          Perhatikan baik-baik: Ada <code>MouseAdapter</code>, <code>KeyAdapter</code>, dan <code>WindowAdapter</code>, tetapi <strong>TIDAK ADA</strong> <code>ActionAdapter</code>! Mengapa?
+          Karena <code>ActionListener</code> hanya memiliki <strong>1 method tunggal</strong> (<code>actionPerformed</code>). Tidak ada method kosong yang perlu dihindari, dan sejak Java 8 ia langsung dapat ditulis sebagai satu baris lambda <code>e -> ...</code>!
+        </p>
+      </div>
+
+      <h2>4. Contoh Kode Lengkap: KatalogListenerDemo.java & AdapterListenerDemo.java</h2>
+      <p>Silakan pelajari kedua implementasi komprehensif berikut:</p>
+
+      
+    <div class="code-wrapper">
+      <div class="code-header">
+        <span class="file-name">📄 KatalogListenerDemo.java</span>
+        <button class="copy-btn" type="button">Salin Kode</button>
+      </div>
+      <pre><code class="language-java">package examples.eventhandling;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+
+/**
+ * Contoh 09B: KatalogListenerDemo
+ * Menunjukkan implementasi berbagai interface listener penting di Java Swing:
+ * 1. ItemListener (JCheckBox, JRadioButton, JComboBox)
+ * 2. ChangeListener (JSlider, JSpinner)
+ * 3. ListSelectionListener (JList)
+ * 4. DocumentListener (JTextField - live text monitoring)
+ */
+public class KatalogListenerDemo extends JFrame {
+
+    // Komponen
+    private JCheckBox chkSusuOat;
+    private JRadioButton rbDingin, rbPanas;
+    private JComboBox&lt;String&gt; cmbUkuran;
+    private JSlider sldGula;
+    private JSpinner spnKuantitas;
+    private JList&lt;String&gt; listBijiKopi;
+    private JTextField txtCatatan;
+
+    // Label hasil pemantauan
+    private JLabel lblStatusItem;
+    private JLabel lblStatusSlider;
+    private JLabel lblStatusList;
+    private JLabel lblStatusDokumen;
+
+    public KatalogListenerDemo() {
+        super(&quot;Katalog Interface Listener - JavaCafe&quot;);
+        setSize(580, 520);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        initComponents();
+        setupListeners();
+    }
+
+    private void initComponents() {
+        JPanel root = new JPanel(new BorderLayout(10, 10));
+        root.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 15));
+        root.setBackground(new Color(248, 250, 252));
+
+        JLabel title = new JLabel(&quot;Eksplorasi Interface Listener Swing&quot;, SwingConstants.CENTER);
+        title.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 16));
+        title.setForeground(new Color(30, 58, 138));
+        root.add(title, BorderLayout.NORTH);
+
+        // Grid tengah (4 baris kartu)
+        JPanel gridCenter = new JPanel(new GridLayout(4, 1, 10, 10));
+        gridCenter.setBackground(new Color(248, 250, 252));
+
+        // 1. Panel ItemListener (CheckBox, Radio, ComboBox)
+        JPanel pnlItem = new JPanel(new GridLayout(2, 2, 6, 6));
+        pnlItem.setBorder(BorderFactory.createTitledBorder(&quot;1. ItemListener (State Changes)&quot;));
+        chkSusuOat = new JCheckBox(&quot;Susu Oat (+Rp 6.000)&quot;);
+        rbDingin = new JRadioButton(&quot;Dingin (Ice)&quot;, true);
+        rbPanas = new JRadioButton(&quot;Panas (Hot)&quot;);
+        ButtonGroup bgSuhu = new ButtonGroup();
+        bgSuhu.add(rbDingin);
+        bgSuhu.add(rbPanas);
+        cmbUkuran = new JComboBox&lt;&gt;(new String[]{&quot;Regular (12 oz)&quot;, &quot;Large (16 oz)&quot;, &quot;Venti (20 oz)&quot;});
+
+        pnlItem.add(chkSusuOat);
+        pnlItem.add(cmbUkuran);
+        pnlItem.add(rbDingin);
+        pnlItem.add(rbPanas);
+        gridCenter.add(pnlItem);
+
+        // 2. Panel ChangeListener (JSlider &amp; JSpinner)
+        JPanel pnlChange = new JPanel(new GridLayout(2, 2, 6, 6));
+        pnlChange.setBorder(BorderFactory.createTitledBorder(&quot;2. ChangeListener (Slider &amp; Spinner)&quot;));
+        sldGula = new JSlider(0, 100, 50);
+        sldGula.setMajorTickSpacing(25);
+        sldGula.setPaintTicks(true);
+        spnKuantitas = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
+        lblStatusSlider = new JLabel(&quot;Level Gula: 50% | Cup: 1&quot;, SwingConstants.CENTER);
+        lblStatusSlider.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 12));
+
+        pnlChange.add(new JLabel(&quot;Tingkat Manis (% Gula):&quot;));
+        pnlChange.add(sldGula);
+        pnlChange.add(new JLabel(&quot;Jumlah Pesanan (Porsi):&quot;));
+        pnlChange.add(spnKuantitas);
+        gridCenter.add(pnlChange);
+
+        // 3. Panel ListSelectionListener (JList Biji Kopi)
+        JPanel pnlList = new JPanel(new BorderLayout(5, 5));
+        pnlList.setBorder(BorderFactory.createTitledBorder(&quot;3. ListSelectionListener (JList Single Selection)&quot;));
+        DefaultListModel&lt;String&gt; modelList = new DefaultListModel&lt;&gt;();
+        modelList.addElement(&quot;Arabika Aceh Gayo (Floral &amp; Fruity)&quot;);
+        modelList.addElement(&quot;Arabika Kintamani Bali (Citrus Acid)&quot;);
+        modelList.addElement(&quot;Toraja Kalosi (Earthy &amp; Dark Chocolate)&quot;);
+        listBijiKopi = new JList&lt;&gt;(modelList);
+        listBijiKopi.setSelectedIndex(0);
+        JScrollPane scrollList = new JScrollPane(listBijiKopi);
+        lblStatusList = new JLabel(&quot;Biji Terpilih: Arabika Aceh Gayo&quot;);
+        pnlList.add(scrollList, BorderLayout.CENTER);
+        pnlList.add(lblStatusList, BorderLayout.SOUTH);
+        gridCenter.add(pnlList);
+
+        // 4. Panel DocumentListener (JTextField Live Typing)
+        JPanel pnlDoc = new JPanel(new BorderLayout(5, 5));
+        pnlDoc.setBorder(BorderFactory.createTitledBorder(&quot;4. DocumentListener (Real-time Typing)&quot;));
+        txtCatatan = new JTextField();
+        lblStatusDokumen = new JLabel(&quot;Catatan Barista: 0 karakter&quot;);
+        lblStatusDokumen.setFont(new Font(&quot;Segoe UI&quot;, Font.ITALIC, 12));
+        pnlDoc.add(txtCatatan, BorderLayout.CENTER);
+        pnlDoc.add(lblStatusDokumen, BorderLayout.SOUTH);
+        gridCenter.add(pnlDoc);
+
+        root.add(gridCenter, BorderLayout.CENTER);
+
+        // Footer Ringkasan
+        lblStatusItem = new JLabel(&quot;ItemEvent: Susu Oat belum dipilih&quot;, SwingConstants.CENTER);
+        lblStatusItem.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 12));
+        lblStatusItem.setForeground(new Color(180, 83, 9));
+        root.add(lblStatusItem, BorderLayout.SOUTH);
+
+        add(root);
+    }
+
+    private void setupListeners() {
+        // =====================================================================
+        // 1. ItemListener pada JCheckBox
+        // getStateChange() membedakan saat dicentang (SELECTED) vs dilepas (DESELECTED)
+        // =====================================================================
+        chkSusuOat.addItemListener(e -&gt; {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                lblStatusItem.setText(&quot;ItemEvent: Susu Oat DIPILIH (+Rp 6.000)&quot;);
+            } else {
+                lblStatusItem.setText(&quot;ItemEvent: Susu Oat DIBATALKAN&quot;);
+            }
+        });
+
+        // ItemListener pada JComboBox
+        cmbUkuran.addItemListener(e -&gt; {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                lblStatusItem.setText(&quot;ItemEvent Ukuran: &quot; + e.getItem());
+            }
+        });
+
+        // =====================================================================
+        // 2. ChangeListener pada JSlider &amp; JSpinner
+        // =====================================================================
+        sldGula.addChangeListener(e -&gt; {
+            int val = sldGula.getValue();
+            int porsi = (Integer) spnKuantitas.getValue();
+            lblStatusSlider.setText(&quot;Level Gula: &quot; + val + &quot;% | Cup: &quot; + porsi);
+        });
+
+        spnKuantitas.addChangeListener(e -&gt; {
+            int val = sldGula.getValue();
+            int porsi = (Integer) spnKuantitas.getValue();
+            lblStatusSlider.setText(&quot;Level Gula: &quot; + val + &quot;% | Cup: &quot; + porsi);
+        });
+
+        // =====================================================================
+        // 3. ListSelectionListener pada JList
+        // getValueIsAdjusting() memastikan event hanya diproses sekali setelah klik selesai
+        // =====================================================================
+        listBijiKopi.addListSelectionListener(e -&gt; {
+            if (!e.getValueIsAdjusting()) {
+                String selected = listBijiKopi.getSelectedValue();
+                lblStatusList.setText(&quot;Biji Terpilih: &quot; + selected);
+            }
+        });
+
+        // =====================================================================
+        // 4. DocumentListener pada JTextField
+        // Memantau penambahan teks (insertUpdate), penghapusan (removeUpdate), dan format (changedUpdate)
+        // =====================================================================
+        txtCatatan.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateCharCount();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateCharCount();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateCharCount();
+            }
+
+            private void updateCharCount() {
+                int length = txtCatatan.getText().length();
+                lblStatusDokumen.setText(&quot;Catatan Barista: &quot; + length + &quot; karakter (Live preview: \&quot;&quot; + txtCatatan.getText() + &quot;\&quot;)&quot;);
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -&gt; new KatalogListenerDemo().setVisible(true));
+    }
+}
+</code></pre>
+    </div>
+    
+
+      
+    <div class="code-wrapper">
+      <div class="code-header">
+        <span class="file-name">📄 AdapterListenerDemo.java</span>
+        <button class="copy-btn" type="button">Salin Kode</button>
+      </div>
+      <pre><code class="language-java">package examples.eventhandling;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+/**
+ * Contoh 09C: AdapterListenerDemo
+ * Menunjukkan keuntungan menggunakan Adapter Class:
+ * Cukup meng-override method yang dibutuhkan saja tanpa dipaksa menulis method kosong!
+ *
+ * Menggunakan:
+ * 1. MouseAdapter (efek hover &amp; klik kartu kafe)
+ * 2. KeyAdapter (shortcut keyboard &amp; filter angka)
+ * 3. FocusAdapter (placeholder cerdas)
+ * 4. WindowAdapter (konfirmasi saat menutup aplikasi)
+ */
+public class AdapterListenerDemo extends JFrame {
+
+    private JPanel cardMenu;
+    private JLabel lblNamaMenu;
+    private JTextField txtNomorMeja;
+    private JLabel lblLogAksi;
+
+    public AdapterListenerDemo() {
+        super(&quot;Penerapan Adapter Classes - JavaCafe&quot;);
+        setSize(520, 370);
+        // Penting: DO_NOTHING_ON_CLOSE agar WindowAdapter yang mengontrol penutupan jendela
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        initComponents();
+        setupAdapters();
+    }
+
+    private void initComponents() {
+        JPanel root = new JPanel(new BorderLayout(10, 10));
+        root.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        root.setBackground(new Color(248, 250, 252));
+
+        JLabel title = new JLabel(&quot;Demo Adapter Class (Bebas Method Kosong)&quot;, SwingConstants.CENTER);
+        title.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 15));
+        title.setForeground(new Color(30, 58, 138));
+        root.add(title, BorderLayout.NORTH);
+
+        JPanel pnlCenter = new JPanel(new GridLayout(2, 1, 10, 10));
+        pnlCenter.setBackground(new Color(248, 250, 252));
+
+        // 1. Kartu Menu dengan MouseAdapter (Hover Effect)
+        cardMenu = new JPanel(new BorderLayout());
+        cardMenu.setBackground(Color.WHITE);
+        cardMenu.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(203, 213, 225), 2),
+                BorderFactory.createEmptyBorder(12, 15, 12, 15)
+        ));
+
+        lblNamaMenu = new JLabel(&quot;&lt;html&gt;&lt;b&gt;☕ Caramel Macchiato&lt;/b&gt;&lt;br&gt;&lt;small&gt;Arahkan kursor / klik kartu ini&lt;/small&gt;&lt;/html&gt;&quot;, SwingConstants.CENTER);
+        lblNamaMenu.setFont(new Font(&quot;Segoe UI&quot;, Font.PLAIN, 14));
+        cardMenu.add(lblNamaMenu, BorderLayout.CENTER);
+        pnlCenter.add(cardMenu);
+
+        // 2. Input Nomor Meja dengan FocusAdapter &amp; KeyAdapter
+        JPanel pnlInput = new JPanel(new GridLayout(2, 1, 4, 4));
+        pnlInput.setBackground(new Color(248, 250, 252));
+        pnlInput.add(new JLabel(&quot;Input Nomor Meja (Ketik angka saja, tekan Enter untuk cek):&quot;));
+
+        txtNomorMeja = new JTextField(&quot;Contoh: 04&quot;);
+        txtNomorMeja.setForeground(Color.GRAY);
+        txtNomorMeja.setFont(new Font(&quot;Segoe UI&quot;, Font.PLAIN, 13));
+        pnlInput.add(txtNomorMeja);
+        pnlCenter.add(pnlInput);
+
+        root.add(pnlCenter, BorderLayout.CENTER);
+
+        // Footer Log
+        lblLogAksi = new JLabel(&quot;Status: Arahkan mouse ke kartu atau klik tombol close (X)&quot;, SwingConstants.CENTER);
+        lblLogAksi.setFont(new Font(&quot;Segoe UI&quot;, Font.ITALIC, 12));
+        lblLogAksi.setForeground(new Color(100, 116, 139));
+        root.add(lblLogAksi, BorderLayout.SOUTH);
+
+        add(root);
+    }
+
+    private void setupAdapters() {
+        // =====================================================================
+        // 1. MouseAdapter pada Kartu Menu
+        // Hanya meng-override mouseEntered, mouseExited, dan mouseClicked.
+        // Tanpa adapter, kita terpaksa menulis mousePressed dan mouseReleased kosong!
+        // =====================================================================
+        cardMenu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Efek hover: ubah warna latar kartu menjadi kuning lembut
+                cardMenu.setBackground(new Color(254, 243, 199));
+                cardMenu.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(245, 158, 11), 2),
+                        BorderFactory.createEmptyBorder(12, 15, 12, 15)
+                ));
+                lblLogAksi.setText(&quot;MouseAdapter: mouseEntered pada kartu!&quot;);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Kembalikan ke warna default
+                cardMenu.setBackground(Color.WHITE);
+                cardMenu.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(203, 213, 225), 2),
+                        BorderFactory.createEmptyBorder(12, 15, 12, 15)
+                ));
+                lblLogAksi.setText(&quot;MouseAdapter: mouseExited dari kartu&quot;);
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                lblLogAksi.setText(String.format(&quot;MouseAdapter: Kartu diklik pada koordinat (%d, %d)&quot;, e.getX(), e.getY()));
+            }
+        });
+
+        // =====================================================================
+        // 2. FocusAdapter pada JTextField untuk Placeholder Teks
+        // =====================================================================
+        txtNomorMeja.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (txtNomorMeja.getText().equals(&quot;Contoh: 04&quot;)) {
+                    txtNomorMeja.setText(&quot;&quot;);
+                    txtNomorMeja.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (txtNomorMeja.getText().trim().isEmpty()) {
+                    txtNomorMeja.setText(&quot;Contoh: 04&quot;);
+                    txtNomorMeja.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        // =====================================================================
+        // 3. KeyAdapter pada JTextField untuk Validasi Angka &amp; Tombol Enter
+        // =====================================================================
+        txtNomorMeja.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                // Tolak jika bukan digit angka
+                if (!Character.isDigit(c)) {
+                    e.consume(); // Mengabaikan input agar tidak tertulis di kolom
+                    lblLogAksi.setText(&quot;KeyAdapter: Hanya boleh memasukkan angka untuk nomor meja!&quot;);
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    lblLogAksi.setText(&quot;KeyAdapter: Enter ditekan! Meja terverifikasi: &quot; + txtNomorMeja.getText());
+                }
+            }
+        });
+
+        // =====================================================================
+        // 4. WindowAdapter pada Frame untuk Dialog Konfirmasi Keluar
+        // Menangani windowClosing tanpa perlu mengimplementasikan 6 method window lainnya!
+        // =====================================================================
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int jawaban = JOptionPane.showConfirmDialog(
+                        AdapterListenerDemo.this,
+                        &quot;Apakah Anda yakin ingin menutup aplikasi kasir JavaCafe?&quot;,
+                        &quot;Konfirmasi Keluar&quot;,
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (jawaban == JOptionPane.YES_OPTION) {
+                    System.exit(0); // Tutup aplikasi
+                } else {
+                    lblLogAksi.setText(&quot;Penutupan dibatalkan oleh kasir.&quot;);
+                }
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -&gt; new AdapterListenerDemo().setVisible(true));
+    }
+}
+</code></pre>
+    </div>
+    
+
+      <div class="practice-box">
+        <div class="practice-header">✏️ Latihan Mandiri 9B.1</div>
+        <p>
+          Gunakan <code>MouseAdapter</code> pada sebuah <code>JLabel</code> foto produk kopi agar saat kursor mouse melintas di atasnya (<code>mouseEntered</code>), teks keterangan menampilkan "Klik untuk zoom", dan saat kursor pergi (<code>mouseExited</code>), teks kembali normal.
+        </p>
+        <details class="hint-details">
+          <summary>💡 Butuh Petunjuk?</summary>
+          <div class="hint-content">
+            Panggil <code>label.addMouseListener(new MouseAdapter() { public void mouseEntered(MouseEvent e) { label.setText("Klik untuk zoom"); } public void mouseExited(MouseEvent e) { label.setText("Espresso Single"); } });</code>.
+          </div>
+        </details>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-title">📝 Ringkasan Bab 09B</div>
+        <ul class="summary-list">
+          <li>Setiap komponen GUI berpasangan dengan listener yang sesuai karakteristik interaksinya.</li>
+          <li><code>ItemListener</code> digunakan untuk status biner centang/seleksi (<code>ItemEvent.SELECTED</code> vs <code>DESELECTED</code>).</li>
+          <li><code>DocumentListener</code> memantau perubahan data teks real-time secara holistik (termasuk aksi Paste/Cut mouse).</li>
+          <li><strong>Adapter Classes</strong> (<code>MouseAdapter</code>, <code>KeyAdapter</code>, <code>WindowAdapter</code>) membebaskan pemrogram dari kewajiban menulis method-method kosong yang tidak diperlukan.</li>
+        </ul>
+      </div>
+
+      <div class="chapter-nav-buttons">
+        <a href="#bab-9a" class="btn-nav-chapter btn-nav-prev">
+          <span class="nav-dir">← Sebelumnya</span>
+          <span class="nav-title">Bab 09A: Fondasi & 4 Gaya Listener</span>
+        </a>
+        
+        <a href="#bab-9c" class="btn-nav-chapter btn-nav-next">
+          <span class="nav-dir">Berikutnya →</span>
+          <span class="nav-title">Bab 09C: Event Playground & 3 Mini-Proyek</span>
+        </a>
+        </div>
+    </article>
+    
+      
+    <article class="chapter-article" id="bab-9c">
+      <div class="chapter-badge">Bab 09C • Praktik & Simulasi</div>
+      <h1 class="chapter-title">Event Playground Interaktif & 3 Mini-Proyek Kasir Terpadu</h1>
+      <p class="chapter-lead">
+        Mengamati urutan kronologis eksekusi event Swing secara langsung di browser melalui simulator Event Playground, mendalami 3 mini-proyek kasir bertingkat di folder examples, serta menaklukkan 9 latihan mandiri dan jebakan maut event handling.
+      </p>
+
+      <div class="objectives-card">
+        <div class="objectives-title">🎯 Tujuan Pembelajaran</div>
+        <ul class="objectives-list">
+          <li>Mengamati urutan firing event mouse (<code>pressed &rarr; released &rarr; clicked &rarr; action</code>) dan keyboard via simulator visual.</li>
+          <li>Membedah dan menjalankan 3 mini-proyek kasir bertingkat (Level 1, 2, dan 3) yang menggabungkan berbagai listener.</li>
+          <li>Menyelesaikan latihan mandiri bertingkat (Mudah, Sedang, Menantang) untuk menguji kesiapan logika.</li>
+          <li>Mendeteksi dan menghindari 4 kesalahan maut penulisan listener yang sering memicu error atau GUI membeku (*freeze*).</li>
+        </ul>
+      </div>
+
+      <h2>1. Live Simulator: Swing Event Playground</h2>
+      <p>
+        Karena program Java Swing dieksekusi di desktop, simulator interaktif di bawah ini dibuat menggunakan Vanilla JavaScript untuk mensimulasikan persis bagaimana JVM menangkap dan menembakkan event ke listener secara real-time.
+      </p>
+      <p>
+        <strong>Cobalah berinteraksi dengan elemen-elemen di bawah:</strong> Klik tombol, gerakkan mouse di area bertitik, atau ketik teks pada kolom input. Amati bagaimana konsol terminal mencatat urutan method yang dipanggil!
+      </p>
+
+      <!-- Event Playground Interactive Container -->
+      <div class="playground-container">
+        <div class="playground-header">
+          <div class="playground-header-title">
+            <span>🎮</span>
+            <span>Swing Event Playground Simulator</span>
+          </div>
+          <span class="playground-badge-sim">Live Real-Time Simulator</span>
+        </div>
+
+        <div class="playground-body">
+          <!-- Interactive Components Box -->
+          <div class="playground-interactive-box">
+            <div class="playground-interactive-title">Komponen Interaktif Tiruan Swing</div>
+
+            <!-- 1. Tombol Simulasi -->
+            <div>
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">
+                A. Uji Klik JButton:
+              </label>
+              <button class="sim-button" id="sim-btn" type="button" style="width: 100%;">
+                ☕ Klik Saya (JButton Pesan Kopi)
+              </button>
+            </div>
+
+            <!-- Sequence Badges Mouse -->
+            <div class="event-sequence-box">
+              <div class="event-sequence-title">Urutan Event Mouse Terpicu:</div>
+              <div class="sequence-tags-list">
+                <span class="sequence-badge" id="seq-mp">1. mousePressed</span>
+                <span style="color: var(--text-muted);">&rarr;</span>
+                <span class="sequence-badge" id="seq-mr">2. mouseReleased</span>
+                <span style="color: var(--text-muted);">&rarr;</span>
+                <span class="sequence-badge" id="seq-mc">3. mouseClicked</span>
+                <span style="color: var(--text-muted);">&rarr;</span>
+                <span class="sequence-badge" id="seq-ap" style="border: 1px solid #f59e0b;">4. actionPerformed</span>
+              </div>
+            </div>
+
+            <!-- 2. Kanvas Mouse Hover -->
+            <div>
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">
+                B. Uji MouseMotion / Hover JPanel:
+              </label>
+              <div class="sim-interactive-area" id="sim-area">
+                Arahkan kursor atau gerakkan mouse di dalam kotak ini (mouseEntered, mouseMoved, mouseExited)
+              </div>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
+                <span class="sequence-badge" id="seq-me">mouseEntered</span>
+                <span class="sequence-badge" id="seq-mx">mouseExited</span>
+              </div>
+            </div>
+
+            <!-- 3. Input Teks Real-Time -->
+            <div>
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">
+                C. Uji Pengetikan JTextField:
+              </label>
+              <input type="text" class="sim-input-box" id="sim-input" placeholder="Ketik nama kopi di sini...">
+            </div>
+
+            <!-- Sequence Badges Keyboard -->
+            <div class="event-sequence-box">
+              <div class="event-sequence-title">Urutan Event Keyboard & Document:</div>
+              <div class="sequence-tags-list">
+                <span class="sequence-badge" id="seq-kp">1. keyPressed</span>
+                <span style="color: var(--text-muted);">&rarr;</span>
+                <span class="sequence-badge" id="seq-kt">2. keyTyped</span>
+                <span style="color: var(--text-muted);">&rarr;</span>
+                <span class="sequence-badge" id="seq-doc">DocumentEvent</span>
+                <span style="color: var(--text-muted);">&rarr;</span>
+                <span class="sequence-badge" id="seq-kr">3. keyReleased</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Console Logger Box -->
+          <div class="playground-console-box">
+            <div class="console-topbar">
+              <span class="console-topbar-title">📟 JVM Event Queue Terminal Log</span>
+              <button class="btn-clear-console" id="btn-clear-sim-log" type="button">Bersihkan Log</button>
+            </div>
+            <div class="console-log-content" id="console-log-content">
+              <div style="color: #64748b; font-style: italic;">
+                Menunggu interaksi pengguna... Klik tombol, gerakkan mouse di atas kanvas, atau ketik teks di sebelah kiri untuk melihat event diproses.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Java Code Matcher Pane -->
+        <div class="playground-java-pane">
+          <div class="playground-java-title">💻 Padanan Kode Java Swing Asli:</div>
+          <pre style="margin: 0; background: #0f172a; padding: 0.75rem; border-radius: 6px; font-size: 0.82rem;"><code class="language-java" id="playground-java-code">// Lakukan aksi pada simulator di atas untuk melihat potongan kode Java yang menangani event tersebut...</code></pre>
+        </div>
+      </div>
+
+      <h2>2. Tiga Mini-Proyek Kasir Terpadu (Bertingkat)</h2>
+      <p>
+        Untuk melihat bagaimana seluruh listener ini berkolaborasi dalam arsitektur aplikasi kasir yang utuh, pelajari dan jalankan 3 mini-proyek bertingkat yang telah disediakan di folder <code>examples/09_EventHandling/mini_proyek/</code>:
+      </p>
+
+      <!-- Proyek Level 1 -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-left: 5px solid #22c55e; border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 2rem;">
+        <h3 style="margin-top: 0; color: #166534;">
+          Level 1: Kasir Topping Dinamis (ItemListener + ActionListener)
+        </h3>
+        <p><strong>Fokus Pembelajaran:</strong> Kolaborasi dua listener berbeda pada satu alur belanja. <code>ItemListener</code> langsung memperbarui estimasi subtotal setiap kali checkbox topping dicentang atau dilepas, sedangkan <code>ActionListener</code> memproses transaksi akhir saat tombol bayar ditekan.</p>
+        
+    <div class="code-wrapper">
+      <div class="code-header">
+        <span class="file-name">📄 Level1_KasirTopping.java</span>
+        <button class="copy-btn" type="button">Salin Kode</button>
+      </div>
+      <pre><code class="language-java">package examples.eventhandling.mini_proyek;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.NumberFormat;
+import java.util.Locale;
+
+/**
+ * Mini-Proyek Level 1: Kasir Topping Sederhana
+ * Memadukan ItemListener (respons instan saat checkbox diklik)
+ * dengan ActionListener (eksekusi tombol hitung dan simpan).
+ */
+public class Level1_KasirTopping extends JFrame {
+
+    private final int HARGA_DASAR = 20000; // Caffe Latte Dasar
+    private final int BIAYA_EXTRA_SHOT = 5000;
+    private final int BIAYA_OAT_MILK = 6000;
+    private final int BIAYA_SYRUP = 4000;
+
+    private JCheckBox chkExtraShot;
+    private JCheckBox chkOatMilk;
+    private JCheckBox chkSyrup;
+    private JLabel lblSubtotalLive;
+    private JButton btnBayar;
+    private JButton btnReset;
+
+    private final NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.forLanguageTag(&quot;id-ID&quot;));
+
+    public Level1_KasirTopping() {
+        super(&quot;Mini-Proyek 1: Kasir Topping (ItemListener + ActionListener)&quot;);
+        setSize(480, 320);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        initComponents();
+        setupListeners();
+    }
+
+    private void initComponents() {
+        JPanel root = new JPanel(new BorderLayout(10, 10));
+        root.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        root.setBackground(new Color(248, 250, 252));
+
+        // Header
+        JPanel pnlHeader = new JPanel(new GridLayout(2, 1, 3, 3));
+        pnlHeader.setBackground(new Color(248, 250, 252));
+        JLabel title = new JLabel(&quot;Pemesanan Caffe Latte&quot;, SwingConstants.CENTER);
+        title.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 16));
+        title.setForeground(new Color(30, 58, 138));
+        JLabel lblDasar = new JLabel(&quot;Harga Dasar: &quot; + nf.format(HARGA_DASAR), SwingConstants.CENTER);
+        pnlHeader.add(title);
+        pnlHeader.add(lblDasar);
+
+        // Body: Checkboxes
+        JPanel pnlAddon = new JPanel(new GridLayout(4, 1, 4, 4));
+        pnlAddon.setBackground(Color.WHITE);
+        pnlAddon.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+
+        chkExtraShot = new JCheckBox(&quot;Extra Espresso Shot (+ &quot; + nf.format(BIAYA_EXTRA_SHOT) + &quot;)&quot;);
+        chkOatMilk = new JCheckBox(&quot;Ganti Susu Oat (+ &quot; + nf.format(BIAYA_OAT_MILK) + &quot;)&quot;);
+        chkSyrup = new JCheckBox(&quot;Sirup Vanilla (+ &quot; + nf.format(BIAYA_SYRUP) + &quot;)&quot;);
+        chkExtraShot.setBackground(Color.WHITE);
+        chkOatMilk.setBackground(Color.WHITE);
+        chkSyrup.setBackground(Color.WHITE);
+
+        lblSubtotalLive = new JLabel(&quot;Estimasi Total: &quot; + nf.format(HARGA_DASAR), SwingConstants.RIGHT);
+        lblSubtotalLive.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 14));
+        lblSubtotalLive.setForeground(new Color(217, 119, 6));
+
+        pnlAddon.add(chkExtraShot);
+        pnlAddon.add(chkOatMilk);
+        pnlAddon.add(chkSyrup);
+        pnlAddon.add(lblSubtotalLive);
+
+        // Footer: Buttons
+        JPanel pnlButtons = new JPanel(new GridLayout(1, 2, 8, 8));
+        pnlButtons.setBackground(new Color(248, 250, 252));
+        btnReset = new JButton(&quot;Reset&quot;);
+        btnBayar = new JButton(&quot;Bayar Sekarang&quot;);
+        btnBayar.setBackground(new Color(30, 58, 138));
+        btnBayar.setForeground(Color.WHITE);
+
+        pnlButtons.add(btnReset);
+        pnlButtons.add(btnBayar);
+
+        root.add(pnlHeader, BorderLayout.NORTH);
+        root.add(pnlAddon, BorderLayout.CENTER);
+        root.add(pnlButtons, BorderLayout.SOUTH);
+
+        add(root);
+    }
+
+    private void setupListeners() {
+        // 1. ItemListener bersama untuk ketiga CheckBox (Live Update saat dicentang/dilepas)
+        ItemListener itemHandler = e -&gt; {
+            int total = hitungTotal();
+            lblSubtotalLive.setText(&quot;Estimasi Total: &quot; + nf.format(total));
+        };
+
+        chkExtraShot.addItemListener(itemHandler);
+        chkOatMilk.addItemListener(itemHandler);
+        chkSyrup.addItemListener(itemHandler);
+
+        // 2. ActionListener untuk Tombol Bayar
+        btnBayar.addActionListener(e -&gt; {
+            int total = hitungTotal();
+            String rincian = String.format(&quot;Pesanan Caffe Latte Berhasil!\nTotal Akhir: %s\nSilakan cetak struk.&quot;, nf.format(total));
+            JOptionPane.showMessageDialog(this, rincian, &quot;Transaksi Sukses&quot;, JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        // 3. ActionListener untuk Tombol Reset
+        btnReset.addActionListener(e -&gt; {
+            chkExtraShot.setSelected(false);
+            chkOatMilk.setSelected(false);
+            chkSyrup.setSelected(false);
+            lblSubtotalLive.setText(&quot;Estimasi Total: &quot; + nf.format(HARGA_DASAR));
+        });
+    }
+
+    private int hitungTotal() {
+        int total = HARGA_DASAR;
+        if (chkExtraShot.isSelected()) total += BIAYA_EXTRA_SHOT;
+        if (chkOatMilk.isSelected()) total += BIAYA_OAT_MILK;
+        if (chkSyrup.isSelected()) total += BIAYA_SYRUP;
+        return total;
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -&gt; new Level1_KasirTopping().setVisible(true));
+    }
+}
+</code></pre>
+    </div>
+    
+      </div>
+
+      <!-- Proyek Level 2 -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-left: 5px solid #3b82f6; border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 2rem;">
+        <h3 style="margin-top: 0; color: #1e3a8a;">
+          Level 2: Form Validasi Real-Time (DocumentListener + KeyListener + FocusListener)
+        </h3>
+        <p><strong>Fokus Pembelajaran:</strong> Menciptakan formulir yang cerdas dan anti-salah-ketik. <code>DocumentListener</code> memberikan live-preview nama pemesan di kartu member dan menghitung batas kuota karakter. <code>KeyAdapter</code> menyaring nomor meja agar hanya bisa diketik digit angka, dan <code>FocusAdapter</code> menghadirkan teks placeholder interaktif.</p>
+        
+    <div class="code-wrapper">
+      <div class="code-header">
+        <span class="file-name">📄 Level2_FormValidasi.java</span>
+        <button class="copy-btn" type="button">Salin Kode</button>
+      </div>
+      <pre><code class="language-java">package examples.eventhandling.mini_proyek;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+/**
+ * Mini-Proyek Level 2: Form Validasi Real-Time
+ * Memadukan DocumentListener, KeyListener, dan FocusListener
+ * untuk menciptakan form input yang interaktif, cerdas, dan aman dari salah ketik.
+ */
+public class Level2_FormValidasi extends JFrame {
+
+    private JTextField txtNama;
+    private JTextField txtMeja;
+    private JLabel lblPreviewNama;
+    private JLabel lblCharCount;
+    private JLabel lblStatusMeja;
+    private JButton btnDaftar;
+
+    public Level2_FormValidasi() {
+        super(&quot;Mini-Proyek 2: Validasi Form Real-Time (Document, Key, Focus)&quot;);
+        setSize(520, 380);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        initComponents();
+        setupListeners();
+    }
+
+    private void initComponents() {
+        JPanel root = new JPanel(new BorderLayout(10, 10));
+        root.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        root.setBackground(new Color(248, 250, 252));
+
+        JLabel title = new JLabel(&quot;Registrasi Meja &amp; Kartu Pesanan&quot;, SwingConstants.CENTER);
+        title.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 16));
+        title.setForeground(new Color(30, 58, 138));
+        root.add(title, BorderLayout.NORTH);
+
+        // Body Form
+        JPanel pnlForm = new JPanel(new GridLayout(6, 1, 4, 4));
+        pnlForm.setBackground(new Color(248, 250, 252));
+
+        // 1. Input Nama
+        pnlForm.add(new JLabel(&quot;1. Nama Pemesan (Maksimal 20 Karakter):&quot;));
+        txtNama = new JTextField();
+        pnlForm.add(txtNama);
+
+        // Preview &amp; Counter Nama
+        JPanel pnlSubNama = new JPanel(new GridLayout(1, 2));
+        pnlSubNama.setBackground(new Color(248, 250, 252));
+        lblPreviewNama = new JLabel(&quot;Kartu: [Nama Pemesan]&quot;);
+        lblPreviewNama.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 11));
+        lblPreviewNama.setForeground(new Color(30, 58, 138));
+        lblCharCount = new JLabel(&quot;0/20 Karakter&quot;, SwingConstants.RIGHT);
+        lblCharCount.setFont(new Font(&quot;Segoe UI&quot;, Font.PLAIN, 11));
+        lblCharCount.setForeground(Color.GRAY);
+        pnlSubNama.add(lblPreviewNama);
+        pnlSubNama.add(lblCharCount);
+        pnlForm.add(pnlSubNama);
+
+        // 2. Input Nomor Meja
+        pnlForm.add(new JLabel(&quot;2. Nomor Meja (Hanya Angka 1-99):&quot;));
+        txtMeja = new JTextField(&quot;Nomor meja...&quot;);
+        txtMeja.setForeground(Color.GRAY);
+        pnlForm.add(txtMeja);
+
+        lblStatusMeja = new JLabel(&quot;Status Meja: Belum diisi&quot;, SwingConstants.LEFT);
+        lblStatusMeja.setFont(new Font(&quot;Segoe UI&quot;, Font.ITALIC, 11));
+        lblStatusMeja.setForeground(Color.GRAY);
+        pnlForm.add(lblStatusMeja);
+
+        root.add(pnlForm, BorderLayout.CENTER);
+
+        // Footer Button
+        btnDaftar = new JButton(&quot;Simpan &amp; Konfirmasi Meja&quot;);
+        btnDaftar.setBackground(new Color(30, 58, 138));
+        btnDaftar.setForeground(Color.WHITE);
+        btnDaftar.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 13));
+        root.add(btnDaftar, BorderLayout.SOUTH);
+
+        add(root);
+    }
+
+    private void setupListeners() {
+        // =====================================================================
+        // 1. DocumentListener pada txtNama (Live Preview &amp; Penghitung Karakter)
+        // =====================================================================
+        txtNama.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) { updateNama(); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { updateNama(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { updateNama(); }
+
+            private void updateNama() {
+                String nama = txtNama.getText();
+                int len = nama.length();
+                lblCharCount.setText(len + &quot;/20 Karakter&quot;);
+
+                if (len &gt; 20) {
+                    lblCharCount.setForeground(Color.RED);
+                    lblPreviewNama.setText(&quot;⚠️ Nama terlalu panjang!&quot;);
+                    lblPreviewNama.setForeground(Color.RED);
+                } else if (nama.trim().isEmpty()) {
+                    lblCharCount.setForeground(Color.GRAY);
+                    lblPreviewNama.setText(&quot;Kartu: [Nama Pemesan]&quot;);
+                    lblPreviewNama.setForeground(new Color(30, 58, 138));
+                } else {
+                    lblCharCount.setForeground(new Color(22, 101, 52));
+                    lblPreviewNama.setText(&quot;Kartu: &quot; + nama);
+                    lblPreviewNama.setForeground(new Color(30, 58, 138));
+                }
+            }
+        });
+
+        // =====================================================================
+        // 2. FocusAdapter pada txtMeja (Placeholder Cerdas)
+        // =====================================================================
+        txtMeja.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (txtMeja.getText().equals(&quot;Nomor meja...&quot;)) {
+                    txtMeja.setText(&quot;&quot;);
+                    txtMeja.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (txtMeja.getText().trim().isEmpty()) {
+                    txtMeja.setText(&quot;Nomor meja...&quot;);
+                    txtMeja.setForeground(Color.GRAY);
+                    lblStatusMeja.setText(&quot;Status Meja: Wajib diisi!&quot;);
+                    lblStatusMeja.setForeground(Color.RED);
+                } else {
+                    lblStatusMeja.setText(&quot;Status Meja: Meja #&quot; + txtMeja.getText() + &quot; Valid ✓&quot;);
+                    lblStatusMeja.setForeground(new Color(22, 101, 52));
+                }
+            }
+        });
+
+        // =====================================================================
+        // 3. KeyAdapter pada txtMeja (Filter Hanya Angka &amp; Batas 2 Digit)
+        // =====================================================================
+        txtMeja.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                // Hanya izinkan digit angka
+                if (!Character.isDigit(c)) {
+                    e.consume(); // batalkan karakter non-angka
+                    return;
+                }
+                // Batasi panjang maksimal 2 digit
+                if (txtMeja.getText().length() &gt;= 2 &amp;&amp; !txtMeja.getText().equals(&quot;Nomor meja...&quot;)) {
+                    e.consume();
+                }
+            }
+        });
+
+        // =====================================================================
+        // 4. ActionListener pada Tombol Konfirmasi
+        // =====================================================================
+        btnDaftar.addActionListener(e -&gt; {
+            String nama = txtNama.getText().trim();
+            String meja = txtMeja.getText().trim();
+
+            if (nama.isEmpty() || nama.length() &gt; 20 || meja.isEmpty() || meja.equals(&quot;Nomor meja...&quot;)) {
+                JOptionPane.showMessageDialog(this,
+                        &quot;Mohon lengkapi formulir dengan benar:\n- Nama 1-20 karakter\n- Nomor meja valid (angka)&quot;,
+                        &quot;Validasi Gagal&quot;, JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this,
+                    String.format(&quot;Meja Berhasil Dipesan!\nNama: %s\nNomor Meja: %s&quot;, nama, meja),
+                    &quot;Sukses&quot;, JOptionPane.INFORMATION_MESSAGE);
+        });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -&gt; new Level2_FormValidasi().setVisible(true));
+    }
+}
+</code></pre>
+    </div>
+    
+      </div>
+
+      <!-- Proyek Level 3 -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-left: 5px solid #f59e0b; border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 2rem;">
+        <h3 style="margin-top: 0; color: #b45309;">
+          Level 3: JavaCafe Pro POS (CardLayout + MouseListener + Hotkeys + WindowListener)
+        </h3>
+        <p><strong>Fokus Pembelajaran:</strong> Arsitektur sistem kasir kafe profesional. Menggunakan <code>MouseAdapter</code> untuk efek hover warna saat kursor melintas di atas kartu menu kopi, shortcut keyboard global (F1 untuk membuka katalog, F2 untuk kasir bayar), dan <code>WindowAdapter</code> (mencegah penutupan window tak sengaja jika masih ada transaksi aktif yang belum dibayar).</p>
+        
+    <div class="code-wrapper">
+      <div class="code-header">
+        <span class="file-name">📄 Level3_JavaCafeProPOS.java</span>
+        <button class="copy-btn" type="button">Salin Kode</button>
+      </div>
+      <pre><code class="language-java">package examples.eventhandling.mini_proyek;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.text.NumberFormat;
+import java.util.Locale;
+
+/**
+ * Mini-Proyek Level 3: JavaCafe Pro POS
+ * Mengintegrasikan CardLayout, MouseListener (Hover &amp; Klik Kartu),
+ * Keyboard Shortcuts (Hotkeys F1 &amp; F2), dan WindowListener (Konfirmasi Keluar).
+ */
+public class Level3_JavaCafeProPOS extends JFrame {
+
+    public static final String HALAMAN_KATALOG = &quot;KATALOG&quot;;
+    public static final String HALAMAN_CHECKOUT = &quot;CHECKOUT&quot;;
+
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel containerKartu = new JPanel(cardLayout);
+
+    // State transaksi
+    private String menuTerpilih = &quot;Belum ada menu dipilih&quot;;
+    private int hargaTerpilih = 0;
+
+    private JLabel lblStatusPilihan;
+    private JLabel lblRincianCheckout;
+    private final NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.forLanguageTag(&quot;id-ID&quot;));
+
+    public Level3_JavaCafeProPOS() {
+        super(&quot;Mini-Proyek 3: JavaCafe Pro POS (CardLayout + Mouse + Keys + Window)&quot;);
+        setSize(540, 390);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        initComponents();
+        setupGlobalHotkeys();
+        setupWindowProtection();
+    }
+
+    private void initComponents() {
+        // Buat 2 halaman kartu
+        JPanel pnlKatalog = buatPanelKatalog();
+        JPanel pnlCheckout = buatPanelCheckout();
+
+        containerKartu.add(pnlKatalog, HALAMAN_KATALOG);
+        containerKartu.add(pnlCheckout, HALAMAN_CHECKOUT);
+
+        add(containerKartu);
+        cardLayout.show(containerKartu, HALAMAN_KATALOG);
+    }
+
+    private JPanel buatPanelKatalog() {
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 15));
+        panel.setBackground(new Color(248, 250, 252));
+
+        // Header
+        JPanel pnlHeader = new JPanel(new GridLayout(2, 1));
+        pnlHeader.setBackground(new Color(248, 250, 252));
+        JLabel title = new JLabel(&quot;Katalog Menu JavaCafe (Tekan F1: Katalog | F2: Bayar)&quot;, SwingConstants.CENTER);
+        title.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 14));
+        title.setForeground(new Color(30, 58, 138));
+
+        lblStatusPilihan = new JLabel(&quot;Menu Aktif: Belum Ada&quot;, SwingConstants.CENTER);
+        lblStatusPilihan.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 12));
+        lblStatusPilihan.setForeground(new Color(217, 119, 6));
+
+        pnlHeader.add(title);
+        pnlHeader.add(lblStatusPilihan);
+        panel.add(pnlHeader, BorderLayout.NORTH);
+
+        // Body: 3 Kartu Menu Interaktif dengan MouseAdapter
+        JPanel pnlGrid = new JPanel(new GridLayout(3, 1, 8, 8));
+        pnlGrid.setBackground(new Color(248, 250, 252));
+
+        pnlGrid.add(buatKartuMenuInteraktif(&quot;☕ Espresso Solo&quot;, 18000, &quot;Espresso murni 30ml ekstra pekat&quot;));
+        pnlGrid.add(buatKartuMenuInteraktif(&quot;☕ Caramel Macchiato&quot;, 28000, &quot;Espresso dengan saus karamel lezat&quot;));
+        pnlGrid.add(buatKartuMenuInteraktif(&quot;🍵 Matcha Fusion Latte&quot;, 26000, &quot;Green tea matcha berpadu susu segar&quot;));
+
+        panel.add(pnlGrid, BorderLayout.CENTER);
+
+        // Footer Button
+        JButton btnKeCheckout = new JButton(&quot;Lanjut ke Kasir Pembayaran [F2] ➔&quot;);
+        btnKeCheckout.setBackground(new Color(30, 58, 138));
+        btnKeCheckout.setForeground(Color.WHITE);
+        btnKeCheckout.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 13));
+        btnKeCheckout.addActionListener(e -&gt; bukaHalamanCheckout());
+        panel.add(btnKeCheckout, BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private JPanel buatKartuMenuInteraktif(String nama, int harga, String desc) {
+        JPanel kartu = new JPanel(new BorderLayout(8, 8));
+        kartu.setBackground(Color.WHITE);
+        kartu.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        kartu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        JLabel lblNama = new JLabel(nama);
+        lblNama.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 13));
+        lblNama.setForeground(new Color(15, 23, 42));
+
+        JLabel lblDesc = new JLabel(desc);
+        lblDesc.setFont(new Font(&quot;Segoe UI&quot;, Font.PLAIN, 11));
+        lblDesc.setForeground(Color.GRAY);
+
+        JLabel lblHarga = new JLabel(nf.format(harga), SwingConstants.RIGHT);
+        lblHarga.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 13));
+        lblHarga.setForeground(new Color(180, 83, 9));
+
+        kartu.add(lblNama, BorderLayout.WEST);
+        kartu.add(lblDesc, BorderLayout.CENTER);
+        kartu.add(lblHarga, BorderLayout.EAST);
+
+        // =====================================================================
+        // MouseAdapter pada Kartu: Efek Hover &amp; Seleksi
+        // =====================================================================
+        kartu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                kartu.setBackground(new Color(254, 243, 199)); // Kuning hover
+                kartu.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(245, 158, 11), 2),
+                        BorderFactory.createEmptyBorder(7, 11, 7, 11)
+                ));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (!menuTerpilih.equals(nama)) {
+                    kartu.setBackground(Color.WHITE);
+                    kartu.setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                            BorderFactory.createEmptyBorder(8, 12, 8, 12)
+                    ));
+                }
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                menuTerpilih = nama;
+                hargaTerpilih = harga;
+                lblStatusPilihan.setText(&quot;Menu Aktif Terpilih: &quot; + nama + &quot; (&quot; + nf.format(harga) + &quot;)&quot;);
+            }
+        });
+
+        return kartu;
+    }
+
+    private JPanel buatPanelCheckout() {
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        panel.setBackground(new Color(255, 251, 235));
+
+        JLabel title = new JLabel(&quot;Konfirmasi Pembayaran Kasir&quot;, SwingConstants.CENTER);
+        title.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 16));
+        title.setForeground(new Color(180, 83, 9));
+        panel.add(title, BorderLayout.NORTH);
+
+        lblRincianCheckout = new JLabel(&quot;&lt;html&gt;&lt;center&gt;Belum ada produk yang dipilih.&lt;br&gt;Silakan kembali ke katalog.&lt;/center&gt;&lt;/html&gt;&quot;, SwingConstants.CENTER);
+        lblRincianCheckout.setFont(new Font(&quot;Segoe UI&quot;, Font.PLAIN, 14));
+        panel.add(lblRincianCheckout, BorderLayout.CENTER);
+
+        // Buttons
+        JPanel pnlBtns = new JPanel(new GridLayout(1, 2, 8, 8));
+        pnlBtns.setBackground(new Color(255, 251, 235));
+        JButton btnKembali = new JButton(&quot;⬅ Kembali ke Katalog [F1]&quot;);
+        JButton btnSelesai = new JButton(&quot;Selesaikan Pesanan ✓&quot;);
+        btnSelesai.setBackground(new Color(22, 101, 52));
+        btnSelesai.setForeground(Color.WHITE);
+
+        btnKembali.addActionListener(e -&gt; cardLayout.show(containerKartu, HALAMAN_KATALOG));
+        btnSelesai.addActionListener(e -&gt; {
+            if (hargaTerpilih == 0) {
+                JOptionPane.showMessageDialog(this, &quot;Pilih menu terlebih dahulu!&quot;, &quot;Peringatan&quot;, JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            JOptionPane.showMessageDialog(this, &quot;Order &quot; + menuTerpilih + &quot; Berhasil Disimpan!&quot;, &quot;Sukses&quot;, JOptionPane.INFORMATION_MESSAGE);
+            menuTerpilih = &quot;Belum ada menu dipilih&quot;;
+            hargaTerpilih = 0;
+            lblStatusPilihan.setText(&quot;Menu Aktif: Belum Ada&quot;);
+            cardLayout.show(containerKartu, HALAMAN_KATALOG);
+        });
+
+        pnlBtns.add(btnKembali);
+        pnlBtns.add(btnSelesai);
+        panel.add(pnlBtns, BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private void bukaHalamanCheckout() {
+        if (hargaTerpilih == 0) {
+            JOptionPane.showMessageDialog(this, &quot;Silakan klik salah satu kartu menu terlebih dahulu!&quot;, &quot;Info&quot;, JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        lblRincianCheckout.setText(String.format(&quot;&lt;html&gt;&lt;center&gt;&lt;h3&gt;Ringkasan Pesanan&lt;/h3&gt;Pesanan: &lt;b&gt;%s&lt;/b&gt;&lt;br&gt;Total Bayar: &lt;font color=&#x27;#b45309&#x27;&gt;&lt;b&gt;%s&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;Tekan [Enter] atau klik Selesaikan.&lt;/center&gt;&lt;/html&gt;&quot;,
+                menuTerpilih, nf.format(hargaTerpilih)));
+        cardLayout.show(containerKartu, HALAMAN_CHECKOUT);
+    }
+
+    // =========================================================================
+    // Keyboard Focus Dispatcher (Shortcut Hotkeys F1 &amp; F2 Aktif di Seluruh Window)
+    // =========================================================================
+    private void setupGlobalHotkeys() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                if (e.getID() == KeyEvent.KEY_PRESSED) {
+                    if (e.getKeyCode() == KeyEvent.VK_F1) {
+                        cardLayout.show(containerKartu, HALAMAN_KATALOG);
+                        return true;
+                    } else if (e.getKeyCode() == KeyEvent.VK_F2) {
+                        bukaHalamanCheckout();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    // =========================================================================
+    // WindowListener (Mencegah Kehilangan Data saat Window Ditutup)
+    // =========================================================================
+    private void setupWindowProtection() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (hargaTerpilih &gt; 0) {
+                    int konfirmasi = JOptionPane.showConfirmDialog(
+                            Level3_JavaCafeProPOS.this,
+                            &quot;Masih ada pesanan aktif (&quot; + menuTerpilih + &quot;) yang belum dibayar!\nYakin ingin keluar dari kasir?&quot;,
+                            &quot;Peringatan Transaksi Aktif&quot;,
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                    if (konfirmasi == JOptionPane.YES_OPTION) {
+                        System.exit(0);
+                    }
+                } else {
+                    System.exit(0);
+                }
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -&gt; new Level3_JavaCafeProPOS().setVisible(true));
+    }
+}
+</code></pre>
+    </div>
+    
+      </div>
+
+      <h2>3. Kotak Awas: Empat Kesalahan Maut Event Handling</h2>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+        <div class="callout callout-warn" style="margin: 0;">
+          <div class="callout-header">⚠️ 1. Lupa addActionListener</div>
+          <p>Tombol sudah dibuat dan method logika perhitungan sudah rapi, namun saat tombol diklik tidak ada reaksi apa-apa. Selalu telusuri baris inisialisasi: apakah <code>btn.addActionListener(...)</code> sudah terpanggil?</p>
+        </div>
+
+        <div class="callout callout-warn" style="margin: 0;">
+          <div class="callout-header">⚠️ 2. Listener Terdaftar Ganda (Double Firing)</div>
+          <p>Dialog sukses muncul dua kali berturut-turut saat tombol ditekan sekali. Ini terjadi jika Anda tidak sengaja memanggil <code>addActionListener</code> dua kali pada objek tombol yang sama (misal di constructor dan di method <code>setupEvents()</code>).</p>
+        </div>
+
+        <div class="callout callout-warn" style="margin: 0;">
+          <div class="callout-header">⚠️ 3. Menaruh Proses Berat di Listener Bikin GUI Membeku (EDT Freeze)</div>
+          <p>Seluruh event dieksekusi di satu thread: <strong>Event Dispatch Thread (EDT)</strong>. Jika Anda memanggil <code>Thread.sleep(5000)</code> atau membaca file harddisk raksasa di dalam <code>actionPerformed()</code>, jendela aplikasi akan menjadi putih, membeku, dan berstatus <em>"Not Responding"</em> karena EDT dilarang merender layar selama proses tersebut!</p>
+        </div>
+
+        <div class="callout callout-warn" style="margin: 0;">
+          <div class="callout-header">⚠️ 4. Salah Pilih: keyTyped vs keyPressed</div>
+          <p>Jika Anda ingin mendeteksi tombol <strong>Panah, Shift, Ctrl, atau tombol F1–F12</strong>, jangan gunakan <code>keyTyped</code>! Tombol modifier hardware tidak menghasilkan karakter teks sehingga tidak memicu <code>keyTyped</code>. Gunakan selalu <code>keyPressed</code> dengan <code>e.getKeyCode() == KeyEvent.VK_...</code>.</p>
+        </div>
+      </div>
+
+      <h2>4. Sembilan Latihan Mandiri Bertingkat</h2>
+
+      <!-- Tingkat Dasar -->
+      <h3 style="color: #166534;">🟢 Tingkat Dasar (Mudah)</h3>
+      <div class="practice-box">
+        <div class="practice-header">Latihan 9C.1: Toggle Label Teks</div>
+        <p>Buat tombol yang saat diklik pertama kali mengubah teks label menjadi "Buka", dan saat diklik kedua kali kembali menjadi "Tutup" (Gunakan boolean flag status).</p>
+        <details class="hint-details">
+          <summary>💡 Petunjuk</summary>
+          <div class="hint-content">Deklarasikan atribut <code>private boolean isOpen = false;</code>. Di dalam listener tombol: <code>isOpen = !isOpen; label.setText(isOpen ? "Buka" : "Tutup");</code>.</div>
+        </details>
+      </div>
+
+      <div class="practice-box">
+        <div class="practice-header">Latihan 9C.2: Live Subtotal CheckBox</div>
+        <p>Buat 2 JCheckBox topping kafe. Setiap kali kotak dicentang atau dihilangkan centangnya, cetak status terbaru ke konsol menggunakan <code>ItemListener</code>.</p>
+        <details class="hint-details">
+          <summary>💡 Petunjuk</summary>
+          <div class="hint-content">Gunakan <code>chk.addItemListener(e -> System.out.println(chk.getText() + ": " + (e.getStateChange() == ItemEvent.SELECTED)));</code>.</div>
+        </details>
+      </div>
+
+      <div class="practice-box">
+        <div class="practice-header">Latihan 9C.3: Tombol Batal Reset Form</div>
+        <p>Buat tombol "Batal" yang saat diklik mengosongkan teks di JTextField dan mematikan semua centang di JCheckBox.</p>
+        <details class="hint-details">
+          <summary>💡 Petunjuk</summary>
+          <div class="hint-content">Panggil <code>textField.setText("");</code> dan <code>checkBox.setSelected(false);</code> di dalam ActionListener tombol Batal.</div>
+        </details>
+      </div>
+
+      <!-- Tingkat Menengah -->
+      <h3 style="color: #1e3a8a;">🟡 Tingkat Menengah (Sedang)</h3>
+      <div class="practice-box">
+        <div class="practice-header">Latihan 9C.4: Filter Karakter Hanya Huruf</div>
+        <p>Pada kolom input nama kasir, gunakan <code>KeyAdapter</code> dan method <code>keyTyped</code> agar pengguna sama sekali tidak bisa mengetik angka!</p>
+        <details class="hint-details">
+          <summary>💡 Petunjuk</summary>
+          <div class="hint-content">Di <code>keyTyped(KeyEvent e)</code>, periksa: <code>if (Character.isDigit(e.getKeyChar())) e.consume();</code>.</div>
+        </details>
+      </div>
+
+      <div class="practice-box">
+        <div class="practice-header">Latihan 9C.5: Live Character Counter</div>
+        <p>Gunakan <code>DocumentListener</code> pada kolom catatan pesanan agar label di bawahnya selalu menampilkan sisa karakter yang tersedia dari batas maksimal 50 karakter.</p>
+        <details class="hint-details">
+          <summary>💡 Petunjuk</summary>
+          <div class="hint-content">Di method <code>insertUpdate</code> dan <code>removeUpdate</code>, hitung: <code>int sisa = 50 - txt.getText().length(); lbl.setText("Sisa: " + sisa);</code>.</div>
+        </details>
+      </div>
+
+      <div class="practice-box">
+        <div class="practice-header">Latihan 9C.6: Konfirmasi Exit dengan WindowAdapter</div>
+        <p>Cegah jendela aplikasi tertutup langsung saat tombol silang (X) ditekan. Tampilkan pop-up dialog konfirmasi <code>JOptionPane.showConfirmDialog</code>.</p>
+        <details class="hint-details">
+          <summary>💡 Petunjuk</summary>
+          <div class="hint-content">Atur <code>setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);</code> lalu override <code>windowClosing(WindowEvent e)</code> pada <code>WindowAdapter</code>.</div>
+        </details>
+      </div>
+
+      <div class="practice-box">
+        <div class="practice-header">Latihan 9C.7: Efek Hover Kartu dengan MouseAdapter</div>
+        <p>Saat mouse melintas di atas JPanel kartu produk, ubah warna background panel menjadi kuning muda, dan kembalikan ke putih saat kursor keluar.</p>
+        <details class="hint-details">
+          <summary>💡 Petunjuk</summary>
+          <div class="hint-content">Gunakan <code>mouseEntered(MouseEvent e) -> panel.setBackground(new Color(254, 243, 199));</code> dan <code>mouseExited(MouseEvent e) -> panel.setBackground(Color.WHITE);</code>.</div>
+        </details>
+      </div>
+
+      <!-- Tingkat Lanjut -->
+      <h3 style="color: #b45309;">🔴 Tingkat Lanjut (Menantang)</h3>
+      <div class="practice-box">
+        <div class="practice-header">Latihan 9C.8: Hotkeys Navigasi Keyboard Global</div>
+        <p>Implementasikan shortcut keyboard: jika pengguna menekan tombol <strong>Escape</strong> di manapun di dalam aplikasi, sistem otomatis kembali ke halaman katalog awal pada CardLayout.</p>
+        <details class="hint-details">
+          <summary>💡 Petunjuk</summary>
+          <div class="hint-content">Gunakan <code>KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(...)</code> untuk menangkap tombol Escape tanpa tergantung komponen mana yang sedang fokus.</div>
+        </details>
+      </div>
+
+      <div class="practice-box">
+        <div class="practice-header">Latihan 9C.9: Pelacak Koordinat Kursor Dinamis</div>
+        <p>Tambahkan <code>MouseMotionListener</code> pada sebuah panel kosong yang secara real-time mencetak koordinat kursor (X, Y) pada sebuah JLabel status di footer.</p>
+        <details class="hint-details">
+          <summary>💡 Petunjuk</summary>
+          <div class="hint-content">Di dalam <code>mouseMoved(MouseEvent e)</code>, perbarui teks label: <code>lblStatus.setText("Koordinat: X=" + e.getX() + ", Y=" + e.getY());</code>.</div>
+        </details>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-title">📝 Ringkasan Bab 09C</div>
+        <ul class="summary-list">
+          <li>Siklus klik tombol mouse melibatkan 4 tahapan sekuensial: <code>mousePressed &rarr; mouseReleased &rarr; mouseClicked &rarr; actionPerformed</code>.</li>
+          <li>Kolaborasi listener (seperti <code>ItemListener</code> untuk live preview dan <code>ActionListener</code> untuk transaksi) menghasilkan antarmuka yang sangat responsif.</li>
+          <li>Hindari proses pemrosesan berat di dalam listener agar Event Dispatch Thread (EDT) tidak mengalami *starvation* yang membuat aplikasi freeze.</li>
+          <li>Gunakan <code>WindowAdapter</code> dengan <code>DO_NOTHING_ON_CLOSE</code> untuk melindungi data transaksi kasir yang belum tersimpan.</li>
+        </ul>
+      </div>
+
+      <div class="chapter-nav-buttons">
+        <a href="#bab-9b" class="btn-nav-chapter btn-nav-prev">
+          <span class="nav-dir">← Sebelumnya</span>
+          <span class="nav-title">Bab 09B: Katalog Listener & Adapter</span>
         </a>
         
         <a href="#bab-10" class="btn-nav-chapter btn-nav-next">
@@ -2648,9 +4494,9 @@ Kasir: Rizki"</code>).
       </div>
 
       <div class="chapter-nav-buttons">
-        <a href="#bab-9" class="btn-nav-chapter btn-nav-prev">
+        <a href="#bab-9c" class="btn-nav-chapter btn-nav-prev">
           <span class="nav-dir">← Sebelumnya</span>
-          <span class="nav-title">Bab 9: Event Handling & ActionListener</span>
+          <span class="nav-title">Bab 09C: Event Playground & 3 Mini-Proyek</span>
         </a>
         
         <a href="#bab-11" class="btn-nav-chapter btn-nav-next">
@@ -3698,6 +5544,73 @@ public class TiketKafeApp extends JFrame {
       
         <div style="margin-bottom: 2rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--card-shadow);">
           <div style="background: var(--primary-subtle); padding: 0.75rem 1.25rem; font-weight: 700; color: var(--primary); font-size: 1rem; border-bottom: 1px solid var(--primary-border);">
+            📦 Peta Komponen GUI ➔ Listener yang Cocok & Method
+          </div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <thead>
+              <tr style="background: var(--bg-primary); text-align: left; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">
+                <th style="padding: 0.65rem 1.25rem; width: 45%;">Method / Sintaks</th>
+                <th style="padding: 0.65rem 1.25rem;">Kegunaan & Efek</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JButton ➔ ActionListener</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Method: actionPerformed(ActionEvent e). Menangani klik tombol utama.</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JCheckBox / JRadioButton ➔ ItemListener</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Method: itemStateChanged(ItemEvent e). Cek e.getStateChange() == ItemEvent.SELECTED.</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JTextField (Tekan Enter) ➔ ActionListener</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Method: actionPerformed(ActionEvent e). Dipicu saat user menekan tombol Enter di dalam kolom teks.</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JTextField (Perubahan Teks) ➔ DocumentListener</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Pasang pada getDocument(). Method: insertUpdate(), removeUpdate(), changedUpdate(). Live preview.</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JTextField (Filter Angka) ➔ KeyListener / KeyAdapter</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Method: keyTyped(KeyEvent e) -> panggil e.consume() jika bukan digit Character.isDigit(c).</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JTextField (Placeholder) ➔ FocusListener / FocusAdapter</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Method: focusGained(FocusEvent e) & focusLost(FocusEvent e). Teks bantuan hilang/muncul.</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JSlider / JSpinner ➔ ChangeListener</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Method: stateChanged(ChangeEvent e). Menangkap pergeseran slider nilai atau pemilih kuantitas.</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JList ➔ ListSelectionListener</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Method: valueChanged(ListSelectionEvent e). Gunakan !e.getValueIsAdjusting() agar tidak double trigger.</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JFrame ➔ WindowListener / WindowAdapter</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Method: windowClosing(WindowEvent e). Dialog konfirmasi pop-up saat menutup aplikasi.</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JPanel / Card ➔ MouseListener / MouseAdapter</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Method: mouseEntered() & mouseExited() untuk efek hover warna, mouseClicked() untuk seleksi kartu.</td>
+            </tr>
+            
+            </tbody>
+          </table>
+        </div>
+        
+        <div style="margin-bottom: 2rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--card-shadow);">
+          <div style="background: var(--primary-subtle); padding: 0.75rem 1.25rem; font-weight: 700; color: var(--primary); font-size: 1rem; border-bottom: 1px solid var(--primary-border);">
             📦 JFrame (Jendela Utama)
           </div>
           <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
@@ -3935,6 +5848,11 @@ public class TiketKafeApp extends JFrame {
             </tr>
             
             <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JOptionPane.showConfirmDialog(parent, msg, title, optionType)</td>
+              <td style="padding: 0.65rem; color: var(--text-main);">Menampilkan dialog konfirmasi YES/NO</td>
+            </tr>
+            
+            <tr style="border-bottom: 1px solid var(--border-color);">
               <td style="padding: 0.65rem; font-family: monospace; font-weight: 600; color: var(--primary);">JOptionPane.INFORMATION_MESSAGE</td>
               <td style="padding: 0.65rem; color: var(--text-main);">Tipe dialog pesan informasi</td>
             </tr>
@@ -3986,57 +5904,52 @@ public class TiketKafeApp extends JFrame {
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya memahami peran JFrame sebagai window utama dan cara membuat kelas turunan (extends JFrame).</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya memahami bahwa Event Listener di Swing adalah penerapan konsep INTERFACE dari materi OOP.</span>
         </label>
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya sudah memanggil setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE) pada jendela utama agar aplikasi tidak menggantung di memori.</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya menguasai 4 gaya penulisan listener (Named Class, Implements di Frame, Anonymous Class, Lambda Expression).</span>
         </label>
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya sudah memanggil setLocationRelativeTo(null) SETELAH setSize(...) agar jendela tampil pas di tengah layar.</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya selalu menggunakan .equals() (BUKAN ==) saat membandingkan teks String dari e.getActionCommand().</span>
         </label>
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya sudah menerapkan setResizable(false) jika aplikasi membutuhkan dimensi jendela yang terkunci.</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya memahami peran Adapter Class (MouseAdapter, KeyAdapter, WindowAdapter) untuk menghindari penulisan method kosong.</span>
         </label>
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya sudah mendeklarasikan seluruh komponen GUI sebagai atribut privat (fields) di bagian atas kelas, bukan variabel lokal constructor.</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya memahami urutan siklus event mouse (mousePressed -> mouseReleased -> mouseClicked -> actionPerformed).</span>
         </label>
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya sudah memecah logika GUI secara terstruktur ke dalam method terpisah (initComponents, setupLayout, setupEvents).</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya tahu perbedaan getKeyChar() (karakter terketik) vs getKeyCode() (tombol keyboard fisik).</span>
         </label>
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya memahami cara kerja CardLayout untuk berpindah antar-panel halaman dalam satu frame.</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya menggunakan DocumentListener saat ingin memantau isi JTextField secara real-time tanpa kecolongan aksi paste mouse.</span>
         </label>
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya telah menggunakan BorderFactory.createEmptyBorder(...) untuk memberi ruang napas (padding) sehingga tampilan tidak berantakan.</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya tidak pernah menaruh proses berat / Thread.sleep di dalam listener agar GUI tidak membeku (EDT freeze).</span>
         </label>
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya dapat membaca status centang JCheckBox menggunakan isSelected() dan meresetnya dengan setSelected(false).</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya memeriksa kembali bahwa setiap komponen telah dipasangi listener via addXxxListener(...) dan tidak terdaftar dobel.</span>
         </label>
         
         <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
           <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya tahu cara memformat angka nominal menjadi mata uang Rupiah yang rapi sebelum ditampilkan ke antarmuka.</span>
-        </label>
-        
-        <label style="display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 0.65rem; cursor: pointer; transition: background 0.15s;">
-          <input type="checkbox" style="margin-top: 0.3rem; width: 18px; height: 18px; accent-color: var(--primary);">
-          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya selalu memeriksa kembali bahwa semua komponen sudah dimasukkan ke panel dengan method .add(...) dan semua tombol memiliki .addActionListener(...).</span>
+          <span style="font-size: 0.92rem; color: var(--text-main); line-height: 1.5;">Saya dapat menghubungkan status isSelected() JCheckBox dengan kalkulasi total transaksi kasir secara dinamis.</span>
         </label>
         
       </div>
@@ -4400,6 +6313,232 @@ public class TiketKafeApp extends JFrame {
           <div class="quiz-explanation" data-explain="Jika komponen dideklarasikan sebagai variabel lokal di constructor, variabel tersebut akan hilang dari scope saat constructor selesai, sehingga method lain tidak bisa membaca atau mengubah nilainya."></div>
         </div>
         
+        <div class="quiz-question-card" data-correct="1">
+          <div class="quiz-question-title">13. Manakah urutan kronologis yang BENAR saat pengguna mengklik satu tombol JButton dengan mouse?</div>
+          <div class="quiz-options">
+            
+            <div class="quiz-option-label" data-opt="0">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">A</span>
+              <span>mouseClicked -> mousePressed -> mouseReleased -> actionPerformed</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="1">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">B</span>
+              <span>mousePressed -> mouseReleased -> mouseClicked -> actionPerformed</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="2">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">C</span>
+              <span>actionPerformed -> mousePressed -> mouseReleased -> mouseClicked</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="3">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">D</span>
+              <span>mouseEntered -> actionPerformed -> mouseReleased -> mouseClicked</span>
+            </div>
+            
+          </div>
+          <div class="quiz-explanation" data-explain="Saat tombol mouse ditekan, terjadi mousePressed. Saat tombol dilepas, terjadi mouseReleased. Jika kedua aksi terjadi di area yang sama, terbentuk mouseClicked. Terakhir, jika komponen tersebut adalah JButton, Swing memicu actionPerformed."></div>
+        </div>
+        
+        <div class="quiz-question-card" data-correct="1">
+          <div class="quiz-question-title">14. Mengapa antarmuka ActionListener TIDAK memiliki kelas pendamping 'ActionAdapter' di Java Swing?</div>
+          <div class="quiz-options">
+            
+            <div class="quiz-option-label" data-opt="0">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">A</span>
+              <span>Karena tim pengembang Java lupa membuatnya saat merancang Java 1.1.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="1">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">B</span>
+              <span>Karena ActionListener hanya memiliki tepat 1 method (actionPerformed), sehingga kelas adapter tidak dibutuhkan.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="2">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">C</span>
+              <span>Karena ActionListener tidak kompatibel dengan kelas abstrak.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="3">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">D</span>
+              <span>Karena ActionAdapter digantikan oleh WindowAdapter.</span>
+            </div>
+            
+          </div>
+          <div class="quiz-explanation" data-explain="Adapter class diciptakan sebagai kelas abstrak dengan implementasi kosong untuk mengurung interface yang memiliki BANYAK method (seperti MouseListener dengan 5 method, WindowListener dengan 7 method). Karena ActionListener hanya memiliki 1 method (SAM / Functional Interface), ia tidak membutuhkan adapter."></div>
+        </div>
+        
+        <div class="quiz-question-card" data-correct="1">
+          <div class="quiz-question-title">15. Perhatikan potongan kode berikut:
+if (e.getActionCommand() == "SIMPAN") { ... }
+Apa potensi bug berbahaya pada kode tersebut?</div>
+          <div class="quiz-options">
+            
+            <div class="quiz-option-label" data-opt="0">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">A</span>
+              <span>Kode tidak akan bisa dikompilasi (compile-time error).</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="1">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">B</span>
+              <span>Operator == membandingkan alamat memori (referensi objek), bukan konten teks String, sehingga kondisi bisa bernilai false meskipun teksnya sama. Seharusnya memakai .equals().</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="2">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">C</span>
+              <span>getActionCommand() mengembalikan integer, bukan String.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="3">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">D</span>
+              <span>Variabel e tidak boleh dipanggil di dalam blok if.</span>
+            </div>
+            
+          </div>
+          <div class="quiz-explanation" data-explain="Di Java, String adalah objek. Membandingkan String dengan operator == hanya memeriksa apakah kedua variabel menunjuk ke alamat memori yang sama persis. Selalu gunakan "SIMPAN".equals(e.getActionCommand()) untuk membandingkan isi nilai String!"></div>
+        </div>
+        
+        <div class="quiz-question-card" data-correct="1">
+          <div class="quiz-question-title">16. Seorang mahasiswa mengeluh: 'Tombol saya ditekan sekali, tetapi pesan dialog sukses muncul DUA KALI berturut-turut!'. Apa penyebab paling umum masalah ini?</div>
+          <div class="quiz-options">
+            
+            <div class="quiz-option-label" data-opt="0">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">A</span>
+              <span>Pengguna mengklik tombol terlalu keras.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="1">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">B</span>
+              <span>Mahasiswa memanggil method btn.addActionListener(...) sebanyak dua kali pada objek tombol yang sama.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="2">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">C</span>
+              <span>JFrame tidak mendukung event klik tunggal.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="3">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">D</span>
+              <span>JOptionPane secara otomatis selalu memunculkan dua jendela.</span>
+            </div>
+            
+          </div>
+          <div class="quiz-explanation" data-explain="Swing mengizinkan pendaftaran multiple listener pada satu komponen. Jika addActionListener terpanggil dua kali (misal di constructor dan di method initComponents), maka kedua listener tersebut akan dieksekusi secara berurutan setiap kali tombol diklik."></div>
+        </div>
+        
+        <div class="quiz-question-card" data-correct="1">
+          <div class="quiz-question-title">17. Apa yang terjadi jika Anda menulis proses yang memakan waktu lama (seperti Thread.sleep(10000) atau download file besar) langsung di dalam method actionPerformed()?</div>
+          <div class="quiz-options">
+            
+            <div class="quiz-option-label" data-opt="0">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">A</span>
+              <span>Aplikasi otomatis membagi beban ke thread CPU lain secara paralel.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="1">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">B</span>
+              <span>GUI akan membeku total (freeze / Not Responding) dan tidak bisa diklik hingga proses tersebut selesai, karena Event Dispatch Thread (EDT) terblokir.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="2">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">C</span>
+              <span>Jendela JFrame akan otomatis menutup dengan sendirinya.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="3">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">D</span>
+              <span>Tombol akan berubah warna menjadi merah.</span>
+            </div>
+            
+          </div>
+          <div class="quiz-explanation" data-explain="Seluruh event dan rendering GUI ditangani oleh satu thread tunggal: Event Dispatch Thread (EDT). Jika EDT dipaksa menjalankan loop berat atau Thread.sleep, ia tidak bisa merender ulang layar atau memproses klik lain, menyebabkan window 'hang' / freeze."></div>
+        </div>
+        
+        <div class="quiz-question-card" data-correct="1">
+          <div class="quiz-question-title">18. Pada interface KeyListener, apa perbedaan mendasar antara method keyTyped() dengan keyPressed()?</div>
+          <div class="quiz-options">
+            
+            <div class="quiz-option-label" data-opt="0">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">A</span>
+              <span>keyTyped dipicu saat tombol dilepas, keyPressed saat tombol ditekan.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="1">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">B</span>
+              <span>keyTyped hanya dipicu untuk karakter unicode yang dapat dicetak (huruf, angka, simbol), sedangkan keyPressed dipicu oleh SEMUA tombol keyboard (termasuk Shift, Ctrl, Alt, F1-F12, Panah).</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="2">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">C</span>
+              <span>keyPressed hanya berlaku untuk tombol angka saja.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="3">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">D</span>
+              <span>Keduanya identik dan tidak ada perbedaannya.</span>
+            </div>
+            
+          </div>
+          <div class="quiz-explanation" data-explain="keyPressed dan keyReleased mencatat penekanan fisik tombol hardware (menghasilkan getKeyCode() seperti KeyEvent.VK_SHIFT). Sedangkan keyTyped hanya dipicu jika penekanan tersebut menghasilkan karakter teks nyata (menghasilkan getKeyChar()). Tombol navigasi/modifier tidak memicu keyTyped."></div>
+        </div>
+        
+        <div class="quiz-question-card" data-correct="0">
+          <div class="quiz-question-title">19. Bagaimana cara mencegah karakter huruf tertulis pada JTextField nomor meja yang hanya boleh menerima angka saat menggunakan KeyListener?</div>
+          <div class="quiz-options">
+            
+            <div class="quiz-option-label" data-opt="0">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">A</span>
+              <span>Memanggil e.consume() pada method keyTyped() jika karakter yang ditekan bukan digit angka.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="1">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">B</span>
+              <span>Menghapus manual karakter menggunakan text.replace().</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="2">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">C</span>
+              <span>Memanggil textField.setVisible(false).</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="3">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">D</span>
+              <span>Mematikan fungsi keyboard pengguna.</span>
+            </div>
+            
+          </div>
+          <div class="quiz-explanation" data-explain="Method e.consume() pada KeyEvent menginstruksikan sistem operasi bahwa event tersebut telah 'dikonsumsi' / dibatalkan secara internal, sehingga sistem tidak akan meneruskan karakter tersebut ke dalam kotak teks JTextField."></div>
+        </div>
+        
+        <div class="quiz-question-card" data-correct="1">
+          <div class="quiz-question-title">20. Mengapa DocumentListener lebih direkomendasikan daripada KeyListener jika Anda ingin memantau perubahan teks JTextField secara real-time (seperti fitur live search atau penghitung karakter)?</div>
+          <div class="quiz-options">
+            
+            <div class="quiz-option-label" data-opt="0">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">A</span>
+              <span>Karena DocumentListener lebih cepat dieksekusi oleh memori RAM.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="1">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">B</span>
+              <span>Karena DocumentListener mampu mendeteksi perubahan teks dari SEMUA sumber, termasuk saat teks di-Paste via mouse (klik kanan Paste) atau dihapus lewat Cut, yang sering lolos dari KeyListener.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="2">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">C</span>
+              <span>Karena KeyListener sudah berstatus deprecated di Java 17.</span>
+            </div>
+            
+            <div class="quiz-option-label" data-opt="3">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--border-color); font-weight: 700; font-size: 0.78rem; flex-shrink: 0;">D</span>
+              <span>Karena DocumentListener hanya butuh satu baris kode lambda.</span>
+            </div>
+            
+          </div>
+          <div class="quiz-explanation" data-explain="KeyListener hanya mendengarkan keyboard fisik. Jika pengguna menempelkan teks menggunakan mouse (klik kanan -> Paste) atau operasi drag-and-drop, KeyListener TIDAK akan terpicu! Sebaliknya, DocumentListener melekat pada model data teks (Document) sehingga menangkap perubahan teks dari jalur manapun."></div>
+        </div>
+        
 
         <div class="quiz-result-banner">
           <div style="font-size: 1.1rem; font-weight: 700; color: var(--primary);">SKOR AKHIR ANDA</div>
@@ -4463,6 +6602,60 @@ public class TiketKafeApp extends JFrame {
         
         <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 0.75rem;">
           <dt style="font-weight: 700; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">
+            Event Source
+          </dt>
+          <dd style="color: var(--text-main); font-size: 0.9rem; line-height: 1.5; margin-left: 0;">
+            Komponen GUI visual yang menjadi pemicu timbulnya suatu aksi pengguna (misalnya: JButton yang diklik, JCheckBox yang dicentang, atau JTextField yang diketik).
+          </dd>
+        </div>
+        
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 0.75rem;">
+          <dt style="font-weight: 700; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">
+            Event Object
+          </dt>
+          <dd style="color: var(--text-main); font-size: 0.9rem; line-height: 1.5; margin-left: 0;">
+            Objek turunan java.util.EventObject (seperti ActionEvent, MouseEvent, KeyEvent) yang membawa rincian data tentang kejadian yang baru saja berlangsung.
+          </dd>
+        </div>
+        
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 0.75rem;">
+          <dt style="font-weight: 700; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">
+            Event Listener
+          </dt>
+          <dd style="color: var(--text-main); font-size: 0.9rem; line-height: 1.5; margin-left: 0;">
+            Interface yang mendefinisikan kontrak method penanganan aksi. Bertindak sebagai 'pendengar' yang akan dieksekusi oleh JVM saat event terkait tiba.
+          </dd>
+        </div>
+        
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 0.75rem;">
+          <dt style="font-weight: 700; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">
+            Adapter Class
+          </dt>
+          <dd style="color: var(--text-main); font-size: 0.9rem; line-height: 1.5; margin-left: 0;">
+            Kelas abstrak pembantu (seperti MouseAdapter, KeyAdapter, WindowAdapter) yang mengimplementasikan seluruh method dari interface listener dengan badan kosong ({}). Memungkinkan programmer hanya meng-override method yang benar-benar dibutuhkan.
+          </dd>
+        </div>
+        
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 0.75rem;">
+          <dt style="font-weight: 700; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">
+            Functional Interface (SAM)
+          </dt>
+          <dd style="color: var(--text-main); font-size: 0.9rem; line-height: 1.5; margin-left: 0;">
+            Interface yang hanya memiliki tepat SATU abstract method (Single Abstract Method). Karena sifatnya ini, ia dapat diimplementasikan secara instan menggunakan sintaks Lambda Expression (e -> ...). Contoh: ActionListener, ItemListener.
+          </dd>
+        </div>
+        
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 0.75rem;">
+          <dt style="font-weight: 700; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">
+            DocumentListener
+          </dt>
+          <dd style="color: var(--text-main); font-size: 0.9rem; line-height: 1.5; margin-left: 0;">
+            Interface pemantau mutasi data teks pada model dokumen Swing (PlainDocument). Menangkap perubahan teks akibat pengetikan, Paste mouse, penghapusan tombol Backspace, maupun Cut.
+          </dd>
+        </div>
+        
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 0.75rem;">
+          <dt style="font-weight: 700; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">
             JFrame
           </dt>
           <dd style="color: var(--text-main); font-size: 0.9rem; line-height: 1.5; margin-left: 0;">
@@ -4503,15 +6696,6 @@ public class TiketKafeApp extends JFrame {
           </dt>
           <dd style="color: var(--text-main); font-size: 0.9rem; line-height: 1.5; margin-left: 0;">
             Layout manager yang memperlakukan komponen sebagai tumpukan kartu yang dapat dibolak-balik (sangat ideal untuk navigasi multi-halaman).
-          </dd>
-        </div>
-        
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 0.75rem;">
-          <dt style="font-weight: 700; color: var(--primary); font-size: 1rem; margin-bottom: 0.25rem;">
-            ActionListener
-          </dt>
-          <dd style="color: var(--text-main); font-size: 0.9rem; line-height: 1.5; margin-left: 0;">
-            Interface pendengar aksi (event listener) yang dipicu ketika pengguna melakukan tindakan seperti mengklik tombol atau menekan Enter.
           </dd>
         </div>
         

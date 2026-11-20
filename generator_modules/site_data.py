@@ -18,7 +18,9 @@ NAV_SECTIONS = [
             {"id": "bab-6", "num": "06", "title": "Menguasai Layout Manager"},
             {"id": "bab-7", "num": "07", "title": "Navigasi Halaman: CardLayout"},
             {"id": "bab-8", "num": "08", "title": "Kerapian Tampilan: Border"},
-            {"id": "bab-9", "num": "09", "title": "Event Handling & ActionListener"},
+            {"id": "bab-9a", "num": "09A", "title": "Fondasi & 4 Gaya Listener"},
+            {"id": "bab-9b", "num": "09B", "title": "Katalog Listener & Adapter"},
+            {"id": "bab-9c", "num": "09C", "title": "Event Playground & 3 Mini-Proyek"},
             {"id": "bab-10", "num": "10", "title": "Dialog Pop-Up: JOptionPane"},
             {"id": "bab-11", "num": "11", "title": "Clean Code & Tema Terpusat"},
             {"id": "bab-12", "num": "12", "title": "Kalkulasi Harga & Format Rupiah"},
@@ -31,7 +33,7 @@ NAV_SECTIONS = [
         "items": [
             {"id": "cheatsheet", "num": "📑", "title": "Cheat Sheet Ringkas"},
             {"id": "checklist", "num": "✅", "title": "Checklist Kesiapan Jurnal"},
-            {"id": "kuis", "num": "🎯", "title": "Kuis Interaktif (12 Soal)"},
+            {"id": "kuis", "num": "🎯", "title": "Kuis Interaktif (20 Soal)"},
             {"id": "glosarium", "num": "📖", "title": "Glosarium Istilah"},
             {"id": "referensi", "num": "🔗", "title": "Daftar Referensi"}
         ]
@@ -170,6 +172,94 @@ QUIZ_QUESTIONS = [
         ],
         "correct": 1,
         "explanation": "Jika komponen dideklarasikan sebagai variabel lokal di constructor, variabel tersebut akan hilang dari scope saat constructor selesai, sehingga method lain tidak bisa membaca atau mengubah nilainya."
+    },
+    {
+        "question": "13. Manakah urutan kronologis yang BENAR saat pengguna mengklik satu tombol JButton dengan mouse?",
+        "options": [
+            "mouseClicked -> mousePressed -> mouseReleased -> actionPerformed",
+            "mousePressed -> mouseReleased -> mouseClicked -> actionPerformed",
+            "actionPerformed -> mousePressed -> mouseReleased -> mouseClicked",
+            "mouseEntered -> actionPerformed -> mouseReleased -> mouseClicked"
+        ],
+        "correct": 1,
+        "explanation": "Saat tombol mouse ditekan, terjadi mousePressed. Saat tombol dilepas, terjadi mouseReleased. Jika kedua aksi terjadi di area yang sama, terbentuk mouseClicked. Terakhir, jika komponen tersebut adalah JButton, Swing memicu actionPerformed."
+    },
+    {
+        "question": "14. Mengapa antarmuka ActionListener TIDAK memiliki kelas pendamping 'ActionAdapter' di Java Swing?",
+        "options": [
+            "Karena tim pengembang Java lupa membuatnya saat merancang Java 1.1.",
+            "Karena ActionListener hanya memiliki tepat 1 method (actionPerformed), sehingga kelas adapter tidak dibutuhkan.",
+            "Karena ActionListener tidak kompatibel dengan kelas abstrak.",
+            "Karena ActionAdapter digantikan oleh WindowAdapter."
+        ],
+        "correct": 1,
+        "explanation": "Adapter class diciptakan sebagai kelas abstrak dengan implementasi kosong untuk mengurung interface yang memiliki BANYAK method (seperti MouseListener dengan 5 method, WindowListener dengan 7 method). Karena ActionListener hanya memiliki 1 method (SAM / Functional Interface), ia tidak membutuhkan adapter."
+    },
+    {
+        "question": "15. Perhatikan potongan kode berikut:\nif (e.getActionCommand() == \"SIMPAN\") { ... }\nApa potensi bug berbahaya pada kode tersebut?",
+        "options": [
+            "Kode tidak akan bisa dikompilasi (compile-time error).",
+            "Operator == membandingkan alamat memori (referensi objek), bukan konten teks String, sehingga kondisi bisa bernilai false meskipun teksnya sama. Seharusnya memakai .equals().",
+            "getActionCommand() mengembalikan integer, bukan String.",
+            "Variabel e tidak boleh dipanggil di dalam blok if."
+        ],
+        "correct": 1,
+        "explanation": "Di Java, String adalah objek. Membandingkan String dengan operator == hanya memeriksa apakah kedua variabel menunjuk ke alamat memori yang sama persis. Selalu gunakan \"SIMPAN\".equals(e.getActionCommand()) untuk membandingkan isi nilai String!"
+    },
+    {
+        "question": "16. Seorang mahasiswa mengeluh: 'Tombol saya ditekan sekali, tetapi pesan dialog sukses muncul DUA KALI berturut-turut!'. Apa penyebab paling umum masalah ini?",
+        "options": [
+            "Pengguna mengklik tombol terlalu keras.",
+            "Mahasiswa memanggil method btn.addActionListener(...) sebanyak dua kali pada objek tombol yang sama.",
+            "JFrame tidak mendukung event klik tunggal.",
+            "JOptionPane secara otomatis selalu memunculkan dua jendela."
+        ],
+        "correct": 1,
+        "explanation": "Swing mengizinkan pendaftaran multiple listener pada satu komponen. Jika addActionListener terpanggil dua kali (misal di constructor dan di method initComponents), maka kedua listener tersebut akan dieksekusi secara berurutan setiap kali tombol diklik."
+    },
+    {
+        "question": "17. Apa yang terjadi jika Anda menulis proses yang memakan waktu lama (seperti Thread.sleep(10000) atau download file besar) langsung di dalam method actionPerformed()?",
+        "options": [
+            "Aplikasi otomatis membagi beban ke thread CPU lain secara paralel.",
+            "GUI akan membeku total (freeze / Not Responding) dan tidak bisa diklik hingga proses tersebut selesai, karena Event Dispatch Thread (EDT) terblokir.",
+            "Jendela JFrame akan otomatis menutup dengan sendirinya.",
+            "Tombol akan berubah warna menjadi merah."
+        ],
+        "correct": 1,
+        "explanation": "Seluruh event dan rendering GUI ditangani oleh satu thread tunggal: Event Dispatch Thread (EDT). Jika EDT dipaksa menjalankan loop berat atau Thread.sleep, ia tidak bisa merender ulang layar atau memproses klik lain, menyebabkan window 'hang' / freeze."
+    },
+    {
+        "question": "18. Pada interface KeyListener, apa perbedaan mendasar antara method keyTyped() dengan keyPressed()?",
+        "options": [
+            "keyTyped dipicu saat tombol dilepas, keyPressed saat tombol ditekan.",
+            "keyTyped hanya dipicu untuk karakter unicode yang dapat dicetak (huruf, angka, simbol), sedangkan keyPressed dipicu oleh SEMUA tombol keyboard (termasuk Shift, Ctrl, Alt, F1-F12, Panah).",
+            "keyPressed hanya berlaku untuk tombol angka saja.",
+            "Keduanya identik dan tidak ada perbedaannya."
+        ],
+        "correct": 1,
+        "explanation": "keyPressed dan keyReleased mencatat penekanan fisik tombol hardware (menghasilkan getKeyCode() seperti KeyEvent.VK_SHIFT). Sedangkan keyTyped hanya dipicu jika penekanan tersebut menghasilkan karakter teks nyata (menghasilkan getKeyChar()). Tombol navigasi/modifier tidak memicu keyTyped."
+    },
+    {
+        "question": "19. Bagaimana cara mencegah karakter huruf tertulis pada JTextField nomor meja yang hanya boleh menerima angka saat menggunakan KeyListener?",
+        "options": [
+            "Memanggil e.consume() pada method keyTyped() jika karakter yang ditekan bukan digit angka.",
+            "Menghapus manual karakter menggunakan text.replace().",
+            "Memanggil textField.setVisible(false).",
+            "Mematikan fungsi keyboard pengguna."
+        ],
+        "correct": 0,
+        "explanation": "Method e.consume() pada KeyEvent menginstruksikan sistem operasi bahwa event tersebut telah 'dikonsumsi' / dibatalkan secara internal, sehingga sistem tidak akan meneruskan karakter tersebut ke dalam kotak teks JTextField."
+    },
+    {
+        "question": "20. Mengapa DocumentListener lebih direkomendasikan daripada KeyListener jika Anda ingin memantau perubahan teks JTextField secara real-time (seperti fitur live search atau penghitung karakter)?",
+        "options": [
+            "Karena DocumentListener lebih cepat dieksekusi oleh memori RAM.",
+            "Karena DocumentListener mampu mendeteksi perubahan teks dari SEMUA sumber, termasuk saat teks di-Paste via mouse (klik kanan Paste) atau dihapus lewat Cut, yang sering lolos dari KeyListener.",
+            "Karena KeyListener sudah berstatus deprecated di Java 17.",
+            "Karena DocumentListener hanya butuh satu baris kode lambda."
+        ],
+        "correct": 1,
+        "explanation": "KeyListener hanya mendengarkan keyboard fisik. Jika pengguna menempelkan teks menggunakan mouse (klik kanan -> Paste) atau operasi drag-and-drop, KeyListener TIDAK akan terpicu! Sebaliknya, DocumentListener melekat pada model data teks (Document) sehingga menangkap perubahan teks dari jalur manapun."
     }
 ]
 
@@ -177,32 +267,51 @@ GLOSSARY_ITEMS = [
     {"term": "AWT (Abstract Window Toolkit)", "def": "Pustaka GUI tertua di Java. Bersifat heavyweight karena setiap komponen bergantung pada implementasi native GUI sistem operasi underlying."},
     {"term": "Swing", "def": "Pustaka GUI lightweight murni Java yang dibangun di atas AWT. Menghasilkan antarmuka yang seragam dan fleksibel di semua platform tanpa bergantung native OS."},
     {"term": "EDT (Event Dispatch Thread)", "def": "Thread khusus di Java yang bertugas menangani seluruh rendering grafis dan pemrosesan event pengguna (klik, ketik). Seluruh manipulasi Swing wajib berjalan di thread ini."},
+    {"term": "Event Source", "def": "Komponen GUI visual yang menjadi pemicu timbulnya suatu aksi pengguna (misalnya: JButton yang diklik, JCheckBox yang dicentang, atau JTextField yang diketik)."},
+    {"term": "Event Object", "def": "Objek turunan java.util.EventObject (seperti ActionEvent, MouseEvent, KeyEvent) yang membawa rincian data tentang kejadian yang baru saja berlangsung."},
+    {"term": "Event Listener", "def": "Interface yang mendefinisikan kontrak method penanganan aksi. Bertindak sebagai 'pendengar' yang akan dieksekusi oleh JVM saat event terkait tiba."},
+    {"term": "Adapter Class", "def": "Kelas abstrak pembantu (seperti MouseAdapter, KeyAdapter, WindowAdapter) yang mengimplementasikan seluruh method dari interface listener dengan badan kosong ({}). Memungkinkan programmer hanya meng-override method yang benar-benar dibutuhkan."},
+    {"term": "Functional Interface (SAM)", "def": "Interface yang hanya memiliki tepat SATU abstract method (Single Abstract Method). Karena sifatnya ini, ia dapat diimplementasikan secara instan menggunakan sintaks Lambda Expression (e -> ...). Contoh: ActionListener, ItemListener."},
+    {"term": "DocumentListener", "def": "Interface pemantau mutasi data teks pada model dokumen Swing (PlainDocument). Menangkap perubahan teks akibat pengetikan, Paste mouse, penghapusan tombol Backspace, maupun Cut."},
     {"term": "JFrame", "def": "Jendela tingkat atas (top-level container) yang memiliki bingkai, judul, tombol minimize/maximize/close, dan menampung seluruh tampilan aplikasi desktop."},
     {"term": "JPanel", "def": "Container perantara generik yang digunakan untuk mengelompokkan sejumlah komponen GUI serta mengatur tata letaknya menggunakan Layout Manager."},
     {"term": "Layout Manager", "def": "Objek pengendali yang secara otomatis mengatur posisi, ukuran, dan penataan komponen di dalam sebuah container."},
     {"term": "BorderLayout", "def": "Layout manager pembagi wilayah 5 arah: NORTH, SOUTH, EAST, WEST, dan CENTER."},
     {"term": "CardLayout", "def": "Layout manager yang memperlakukan komponen sebagai tumpukan kartu yang dapat dibolak-balik (sangat ideal untuk navigasi multi-halaman)."},
-    {"term": "ActionListener", "def": "Interface pendengar aksi (event listener) yang dipicu ketika pengguna melakukan tindakan seperti mengklik tombol atau menekan Enter."},
     {"term": "JOptionPane", "def": "Kelas utilitas untuk memunculkan kotak dialog standar (pop-up) seperti pesan informasi, konfirmasi, input, atau peringatan."},
     {"term": "EmptyBorder", "def": "Border tak kasat mata yang berfungsi memberikan bantalan ruang (padding/margin) di sekitar komponen agar tidak menempel ke tepi."},
     {"term": "Dependency Injection", "def": "Pola perancangan di mana sebuah objek (misal panel) menerima dependensinya (misal frame utama) lewat parameter constructor."}
 ]
 
 CHECKLIST_ITEMS = [
-    "Saya memahami peran JFrame sebagai window utama dan cara membuat kelas turunan (extends JFrame).",
-    "Saya sudah memanggil setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE) pada jendela utama agar aplikasi tidak menggantung di memori.",
-    "Saya sudah memanggil setLocationRelativeTo(null) SETELAH setSize(...) agar jendela tampil pas di tengah layar.",
-    "Saya sudah menerapkan setResizable(false) jika aplikasi membutuhkan dimensi jendela yang terkunci.",
-    "Saya sudah mendeklarasikan seluruh komponen GUI sebagai atribut privat (fields) di bagian atas kelas, bukan variabel lokal constructor.",
-    "Saya sudah memecah logika GUI secara terstruktur ke dalam method terpisah (initComponents, setupLayout, setupEvents).",
-    "Saya memahami cara kerja CardLayout untuk berpindah antar-panel halaman dalam satu frame.",
-    "Saya telah menggunakan BorderFactory.createEmptyBorder(...) untuk memberi ruang napas (padding) sehingga tampilan tidak berantakan.",
-    "Saya dapat membaca status centang JCheckBox menggunakan isSelected() dan meresetnya dengan setSelected(false).",
-    "Saya tahu cara memformat angka nominal menjadi mata uang Rupiah yang rapi sebelum ditampilkan ke antarmuka.",
-    "Saya selalu memeriksa kembali bahwa semua komponen sudah dimasukkan ke panel dengan method .add(...) dan semua tombol memiliki .addActionListener(...)."
+    "Saya memahami bahwa Event Listener di Swing adalah penerapan konsep INTERFACE dari materi OOP.",
+    "Saya menguasai 4 gaya penulisan listener (Named Class, Implements di Frame, Anonymous Class, Lambda Expression).",
+    "Saya selalu menggunakan .equals() (BUKAN ==) saat membandingkan teks String dari e.getActionCommand().",
+    "Saya memahami peran Adapter Class (MouseAdapter, KeyAdapter, WindowAdapter) untuk menghindari penulisan method kosong.",
+    "Saya memahami urutan siklus event mouse (mousePressed -> mouseReleased -> mouseClicked -> actionPerformed).",
+    "Saya tahu perbedaan getKeyChar() (karakter terketik) vs getKeyCode() (tombol keyboard fisik).",
+    "Saya menggunakan DocumentListener saat ingin memantau isi JTextField secara real-time tanpa kecolongan aksi paste mouse.",
+    "Saya tidak pernah menaruh proses berat / Thread.sleep di dalam listener agar GUI tidak membeku (EDT freeze).",
+    "Saya memeriksa kembali bahwa setiap komponen telah dipasangi listener via addXxxListener(...) dan tidak terdaftar dobel.",
+    "Saya dapat menghubungkan status isSelected() JCheckBox dengan kalkulasi total transaksi kasir secara dinamis."
 ]
 
 CHEATSHEET_DATA = [
+    {
+        "category": "Peta Komponen GUI ➔ Listener yang Cocok & Method",
+        "rows": [
+            ("JButton ➔ ActionListener", "Method: actionPerformed(ActionEvent e). Menangani klik tombol utama."),
+            ("JCheckBox / JRadioButton ➔ ItemListener", "Method: itemStateChanged(ItemEvent e). Cek e.getStateChange() == ItemEvent.SELECTED."),
+            ("JTextField (Tekan Enter) ➔ ActionListener", "Method: actionPerformed(ActionEvent e). Dipicu saat user menekan tombol Enter di dalam kolom teks."),
+            ("JTextField (Perubahan Teks) ➔ DocumentListener", "Pasang pada getDocument(). Method: insertUpdate(), removeUpdate(), changedUpdate(). Live preview."),
+            ("JTextField (Filter Angka) ➔ KeyListener / KeyAdapter", "Method: keyTyped(KeyEvent e) -> panggil e.consume() jika bukan digit Character.isDigit(c)."),
+            ("JTextField (Placeholder) ➔ FocusListener / FocusAdapter", "Method: focusGained(FocusEvent e) & focusLost(FocusEvent e). Teks bantuan hilang/muncul."),
+            ("JSlider / JSpinner ➔ ChangeListener", "Method: stateChanged(ChangeEvent e). Menangkap pergeseran slider nilai atau pemilih kuantitas."),
+            ("JList ➔ ListSelectionListener", "Method: valueChanged(ListSelectionEvent e). Gunakan !e.getValueIsAdjusting() agar tidak double trigger."),
+            ("JFrame ➔ WindowListener / WindowAdapter", "Method: windowClosing(WindowEvent e). Dialog konfirmasi pop-up saat menutup aplikasi."),
+            ("JPanel / Card ➔ MouseListener / MouseAdapter", "Method: mouseEntered() & mouseExited() untuk efek hover warna, mouseClicked() untuk seleksi kartu.")
+        ]
+    },
     {
         "category": "JFrame (Jendela Utama)",
         "rows": [
@@ -259,10 +368,11 @@ CHEATSHEET_DATA = [
         "rows": [
             ("JOptionPane.showMessageDialog(parent, msg, title, type)", "Menampilkan pop-up dialog dengan ikon standar"),
             ("JOptionPane.showMessageDialog(parent, msg, title, type, icon)", "Menampilkan pop-up dialog dengan custom ImageIcon"),
+            ("JOptionPane.showConfirmDialog(parent, msg, title, optionType)", "Menampilkan dialog konfirmasi YES/NO"),
             ("JOptionPane.INFORMATION_MESSAGE", "Tipe dialog pesan informasi"),
             ("JOptionPane.WARNING_MESSAGE", "Tipe dialog pesan peringatan"),
             ("JOptionPane.ERROR_MESSAGE", "Tipe dialog pesan kesalahan/error")
         ]
     }
 ]
-print("site_data.py ready.")
+print("site_data.py updated successfully.")

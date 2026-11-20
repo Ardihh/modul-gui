@@ -22,7 +22,8 @@ Modul ini membimbing mahasiswa semester awal yang telah memahami dasar-dasar OOP
 4. **Alat Bantu Belajar Praktikan:**
    - **Tombol Salin Kode:** Salin contoh kode Java hanya dengan 1 kali klik.
    - **Pencarian Cepat Client-Side:** Tekan `Ctrl + K` atau klik tombol cari untuk menemukan konsep atau method secara instan.
-   - **Kuis Pilihan Ganda Interaktif:** 12 soal evaluasi konsep GUI dengan skor otomatis dan pembahasan mendalam.
+   - **Event Playground Simulator:** Simulator interaktif browser berbasis JavaScript untuk mengamati urutan panggilan method event (`mousePressed` &rarr; `released` &rarr; `clicked` &rarr; `actionPerformed`) secara real-time.
+   - **Kuis Pilihan Ganda Interaktif:** 20 soal evaluasi konsep GUI dengan skor otomatis, pembahasan mendalam, dan soal analisis bug kode.
    - **Checklist Kesiapan Jurnal:** Daftar periksa mandiri sebelum mahasiswa mulai mengerjakan tugas jurnal.
    - **Cheat Sheet Ringkas:** Tabel satu halaman berisi seluruh method sakti Swing dan layout manager.
    - **Aksesibel & Cetak-Ramah:** Dilengkapi stylesheet `@media print` sehingga praktikan dapat langsung mencetak atau menyimpan modul ke format PDF via browser (`Ctrl + P`).
@@ -81,7 +82,15 @@ modul-gui/
     ├── 06_LayoutManager/LayoutDemo.java
     ├── 07_CardLayout/NavigasiCardDemo.java
     ├── 08_BorderDemo/BorderDemo.java
-    ├── 09_EventHandling/EventHandlingDemo.java
+    ├── 09_EventHandling/
+    │   ├── EmpatGayaListenerDemo.java # Perbandingan 4 gaya listener pada counter kafe
+    │   ├── KatalogListenerDemo.java   # Demo ItemListener, ChangeListener, ListSelection
+    │   ├── AdapterListenerDemo.java   # Demo MouseAdapter, KeyAdapter, WindowAdapter
+    │   ├── EventHandlingDemo.java     # Demo dasar ActionListener & CheckBox
+    │   └── mini_proyek/
+    │       ├── Level1_KasirTopping.java     # Mini-proyek Level 1 (Item + Action)
+    │       ├── Level2_FormValidasi.java     # Mini-proyek Level 2 (Doc + Key + Focus)
+    │       └── Level3_JavaCafeProPOS.java   # Mini-proyek Level 3 (CardLayout + Mouse + Keys + Window)
     ├── 10_DialogJOptionPane/DialogDemo.java
     ├── 11_CleanCode/
     │   ├── CafeTheme.java

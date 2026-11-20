@@ -20,7 +20,9 @@
     { id: 'bab-6', title: 'Bab 6: Menguasai Layout Manager', snippet: 'BorderLayout, GridLayout, FlowLayout, dan teknik nested layout panel di dalam panel.' },
     { id: 'bab-7', title: 'Bab 7: Navigasi Halaman dengan CardLayout', snippet: 'Sistem kartu bertumpuk, add kartu, cardLayout.show, beralih antar-halaman.' },
     { id: 'bab-8', title: 'Bab 8: Kerapian Tampilan dengan Border', snippet: 'BorderFactory, createEmptyBorder (padding), createLineBorder, compound border.' },
-    { id: 'bab-9', title: 'Bab 9: Event Handling & ActionListener', snippet: 'Event, Source, Listener, Anonymous class vs Lambda, membaca isSelected() JCheckBox.' },
+    { id: 'bab-9a', title: 'Bab 09A: Fondasi Event Handling & 4 Gaya Listener', snippet: 'Model Event, Analogi Bel Pintu, Interface OOP, 4 Gaya Penulisan, getSource vs getActionCommand.' },
+    { id: 'bab-9b', title: 'Bab 09B: Katalog Lengkap Interface Listener & Adapter', snippet: 'ItemListener, MouseListener, KeyListener, FocusListener, DocumentListener, ChangeListener, ListSelectionListener, WindowListener, Adapter Classes.' },
+    { id: 'bab-9c', title: 'Bab 09C: Event Playground Interaktif & 3 Mini-Proyek', snippet: 'Simulator Event Real-Time, Urutan Pemanggilan Event, 3 Mini-Proyek Kasir Bertingkat (Level 1, 2, 3), Latihan Mandiri.' },
     { id: 'bab-10', title: 'Bab 10: Dialog Pop-Up dengan JOptionPane', snippet: 'showMessageDialog, tipe pesan informasi, peringatan, error, custom icon dialog.' },
     { id: 'bab-11', title: 'Bab 11: Clean Code & Arsitektur GUI', snippet: 'Komponen sebagai field, inisialisasi bertahap, modular method, kelas Theme terpusat.' },
     { id: 'bab-12', title: 'Bab 12: Pola Perhitungan Harga & Format Rupiah', snippet: 'Base price + add-on dinamis, format mata uang rupiah, reset form ke kondisi default.' },
@@ -368,6 +370,159 @@
   }
 
   // ==========================================
+  // 8. Event Playground Simulator Engine
+  // ==========================================
+  function setupEventPlayground() {
+    const consoleLog = document.getElementById('console-log-content');
+    const btnClear = document.getElementById('btn-clear-sim-log');
+    const simBtn = document.getElementById('sim-btn');
+    const simArea = document.getElementById('sim-area');
+    const simInput = document.getElementById('sim-input');
+    const javaCodeView = document.getElementById('playground-java-code');
+
+    if (!consoleLog) return;
+
+    function addLog(eventName, detailText) {
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0] + '.' + String(now.getMilliseconds()).padStart(3, '0');
+
+      const logRow = document.createElement('div');
+      logRow.className = 'log-item';
+      logRow.innerHTML = `
+        <span class="log-time">[${timeStr}]</span>
+        <span class="log-event-name">${eventName}</span>
+        <span class="log-event-detail">&rarr; ${detailText}</span>
+      `;
+      consoleLog.appendChild(logRow);
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+    }
+
+    function flashBadge(badgeId) {
+      const el = document.getElementById(badgeId);
+      if (el) {
+        el.classList.add('fired');
+        setTimeout(() => el.classList.remove('fired'), 400);
+      }
+    }
+
+    if (btnClear) {
+      btnClear.addEventListener('click', () => {
+        consoleLog.innerHTML = '<div style="color: #64748b; font-style: italic;">Log konsol dibersihkan. Lakukan aksi pada tombol, kanvas, atau input teks di sebelah kiri...</div>';
+      });
+    }
+
+    // --- Sim Button Interactions ---
+    if (simBtn) {
+      simBtn.addEventListener('mousedown', (e) => {
+        addLog('mousePressed', `MouseEvent (source=JButton, button=${e.button + 1}, x=${e.offsetX}, y=${e.offsetY})`);
+        flashBadge('seq-mp');
+      });
+
+      simBtn.addEventListener('mouseup', (e) => {
+        addLog('mouseReleased', `MouseEvent (source=JButton, button=${e.button + 1}, x=${e.offsetX}, y=${e.offsetY})`);
+        flashBadge('seq-mr');
+      });
+
+      simBtn.addEventListener('click', (e) => {
+        addLog('mouseClicked', `MouseEvent (clickCount=1, x=${e.offsetX}, y=${e.offsetY})`);
+        flashBadge('seq-mc');
+        setTimeout(() => {
+          addLog('actionPerformed', `ActionEvent (source=JButton, cmd="PESAN_ESPRESSO", id=ACTION_PERFORMED)`);
+          flashBadge('seq-ap');
+        }, 60);
+
+        if (javaCodeView) {
+          javaCodeView.textContent =
+`// Siklus pemanggilan saat JButton diklik:
+btnPesan.addMouseListener(new MouseAdapter() {
+    public void mousePressed(MouseEvent e)  { /* 1. mousePressed */ }
+    public void mouseReleased(MouseEvent e) { /* 2. mouseReleased */ }
+    public void mouseClicked(MouseEvent e)  { /* 3. mouseClicked */ }
+});
+
+// Listener Utama Aksi Tombol (dipicu setelah klik tuntas):
+btnPesan.addActionListener(e -> {
+    // 4. actionPerformed
+    System.out.println("Aksi dijalankan: " + e.getActionCommand());
+});`;
+          if (window.Prism) Prism.highlightElement(javaCodeView);
+        }
+      });
+    }
+
+    // --- Sim Area Interactions ---
+    if (simArea) {
+      simArea.addEventListener('mouseenter', (e) => {
+        simArea.classList.add('area-hover');
+        addLog('mouseEntered', `MouseEvent (kursor masuk ke JPanel, x=${e.offsetX}, y=${e.offsetY})`);
+        flashBadge('seq-me');
+      });
+
+      simArea.addEventListener('mouseleave', () => {
+        simArea.classList.remove('area-hover');
+        addLog('mouseExited', `MouseEvent (kursor meninggalkan area JPanel)`);
+        flashBadge('seq-mx');
+      });
+
+      let moveThrottle = false;
+      simArea.addEventListener('mousemove', (e) => {
+        if (moveThrottle) return;
+        moveThrottle = true;
+        setTimeout(() => { moveThrottle = false; }, 100);
+        addLog('mouseMoved', `MouseMotion (x=${e.offsetX}, y=${e.offsetY})`);
+      });
+    }
+
+    // --- Sim Input Interactions ---
+    if (simInput) {
+      simInput.addEventListener('focus', () => {
+        addLog('focusGained', 'FocusEvent (JTextField menerima fokus kursor)');
+      });
+
+      simInput.addEventListener('blur', () => {
+        addLog('focusLost', 'FocusEvent (Kursor meninggalkan JTextField)');
+      });
+
+      simInput.addEventListener('keydown', (e) => {
+        addLog('keyPressed', `KeyEvent (keyCode=${e.keyCode}, key="${e.key}")`);
+        flashBadge('seq-kp');
+      });
+
+      simInput.addEventListener('keypress', (e) => {
+        addLog('keyTyped', `KeyEvent (keyChar='${e.key}', code=VK_UNDEFINED)`);
+        flashBadge('seq-kt');
+      });
+
+      simInput.addEventListener('keyup', (e) => {
+        addLog('keyReleased', `KeyEvent (keyCode=${e.keyCode}, key="${e.key}")`);
+        flashBadge('seq-kr');
+      });
+
+      simInput.addEventListener('input', (e) => {
+        addLog('DocumentListener', `DocumentEvent (insert/remove: teks sekarang="${simInput.value}")`);
+        flashBadge('seq-doc');
+
+        if (javaCodeView) {
+          javaCodeView.textContent =
+`// Memantau pengetikan teks secara real-time:
+textField.addKeyListener(new KeyAdapter() {
+    public void keyPressed(KeyEvent e)  { /* 1. keyPressed */ }
+    public void keyTyped(KeyEvent e)    { /* 2. keyTyped */ }
+    public void keyReleased(KeyEvent e) { /* 3. keyReleased */ }
+});
+
+textField.getDocument().addDocumentListener(new DocumentListener() {
+    public void insertUpdate(DocumentEvent e) { /* Perubahan isi teks */ }
+    public void removeUpdate(DocumentEvent e) { /* Penghapusan karakter */ }
+    public void changedUpdate(DocumentEvent e) { /* Format styling */ }
+});`;
+          if (window.Prism) Prism.highlightElement(javaCodeView);
+        }
+      });
+    }
+  }
+
+  // ==========================================
   // Initialization
   // ==========================================
   document.addEventListener('DOMContentLoaded', () => {
@@ -375,6 +530,7 @@
     navigateToHash();
     setupCopyButtons();
     setupQuiz();
+    setupEventPlayground();
   });
 
 })();

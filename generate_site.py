@@ -11,7 +11,7 @@ from generator_modules.utils import get_code, code_box, nav_buttons
 # Import modul bab & data
 from generator_modules.site_data import NAV_SECTIONS
 from generator_modules.chapters_part1 import get_beranda, get_bab1, get_bab2, get_bab3, get_bab4
-from generator_modules.chapters_part2 import get_bab5, get_bab6, get_bab7, get_bab8, get_bab9
+from generator_modules.chapters_part2 import get_bab5, get_bab6, get_bab7, get_bab8, get_bab9a, get_bab9b, get_bab9c
 from generator_modules.chapters_part3 import get_bab10, get_bab11, get_bab12, get_bab13, get_bab14
 from generator_modules.chapters_appendix import get_cheatsheet, get_checklist, get_kuis, get_glosarium, get_referensi
 
@@ -99,7 +99,9 @@ def build_index_html():
       {get_bab6()}
       {get_bab7()}
       {get_bab8()}
-      {get_bab9()}
+      {get_bab9a()}
+      {get_bab9b()}
+      {get_bab9c()}
       {get_bab10()}
       {get_bab11()}
       {get_bab12()}

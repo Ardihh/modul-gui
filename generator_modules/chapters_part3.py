@@ -120,7 +120,7 @@ def get_bab10():
         </ul>
       </div>
 
-      {nav_buttons('bab-9', 'Bab 9: Event Handling & ActionListener', 'bab-11', 'Bab 11: Clean Code & Tema Terpusat')}
+      {nav_buttons('bab-9c', 'Bab 09C: Event Playground & 3 Mini-Proyek', 'bab-11', 'Bab 11: Clean Code & Tema Terpusat')}
     </article>
     '''
 
